@@ -112,8 +112,10 @@ func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
     templates["view"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/view.html", "templates/base.html")
     templates["edit"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/edit.html", "templates/base.html")
-    fs := http.FileServer(http.Dir("static"))
-    http.Handle("/static/", http.StripPrefix("/static/", fs))
+    staticFileServer := http.FileServer(http.Dir("static"))
+    http.Handle("/static/", http.StripPrefix("/static/", staticFileServer))
+    mediaFileServer := http.FileServer(http.Dir("media"))
+    http.Handle("/media/", http.StripPrefix("/media/", mediaFileServer))
     http.HandleFunc("/", redirectToHomeHandler)
     http.HandleFunc("/pages/", makeHandler(viewHandler))
     http.HandleFunc("/edit/", makeHandler(editHandler))
