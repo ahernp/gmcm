@@ -99,8 +99,8 @@ func editHandler(w http.ResponseWriter, r *http.Request, slug string) {
 
 func saveHandler(w http.ResponseWriter, r *http.Request, slug string) {
     body := r.FormValue("body")
-    bodySansCarrigeReturns := strings.ReplaceAll(body, "\r", "")
-    p := &Page{Slug: slug, Body: []byte(bodySansCarrigeReturns)}
+    bodySansCarriageReturns := strings.ReplaceAll(body, "\r", "")
+    p := &Page{Slug: slug, Body: []byte(bodySansCarriageReturns)}
     err := p.save()
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
