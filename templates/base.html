@@ -1,0 +1,46 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{template "title" .}}</title>
+        <link href="/static/favicon.ico" rel="shortcut icon" type="image/ico" />
+        <link href="/static/css/pure-min.css" rel="stylesheet" />
+        <link href="/static/css/jquery.fancybox-3.5.7.min.css" rel="stylesheet" />
+        <link href="/static/css/jquery.dataTables-1.10.18.min.css" rel="stylesheet">
+        <link href="/static/css/select2-4.0.7.min.css" rel="stylesheet">
+        <link href="/static/css/styles.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="mainmenu">
+            {{template "mainmenu" .}}
+        </div>
+        <div id="sidebar">
+            <form action="/search" method="GET">
+                <input
+                    id="search_string"
+                    type="text"
+                    name="search"
+                    placeholder="Search"
+                    autofocus>
+            </form>
+            <p><a href="/add">Add Page</a></p>
+            <h3 title="Most recently updated">History</h3>
+        </div>
+        <div id="content">
+            {{template "content" .}}
+        </div>
+        <script src="/static/js/jquery-3.4.1.min.js"></script>
+        <script src="/static/js/jquery.fancybox-3.5.7.min.js"></script>
+        <script src="/static/js/jquery.dataTables-1.10.18.min.js"></script>
+        <script src="/static/js/select2-4.0.7.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $.fancybox.defaults.loop = true;
+                $("a:has(img)").not("#logo").attr({"data-fancybox": "gallery", "data-caption": function(i, val) {return $(this).children("img:first").attr("title")}});
+                $('table').not('.non-datatable').DataTable();
+                $('select').select2();
+            });
+        </script>
+    </body>
+</html>
+{{end}}

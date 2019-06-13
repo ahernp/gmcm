@@ -1,6 +1,11 @@
-<h1>Editing {{.Slug}}</h1>
+{{define "title"}}Editing {{.Slug}}{{end}}
 
+{{define "mainmenu"}}
+<p>[<a href="/pages/{{.Slug}}">view</a>]</p>
+{{end}}
+
+{{define "content"}}
 <form action="/save/{{.Slug}}" method="POST">
     <div><textarea name="body" rows="20" cols="80">{{printf "%s" .Body}}</textarea></div>
     <div><input type="submit" value="Save"></div>
-</form>
+</form>{{end}}

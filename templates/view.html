@@ -1,5 +1,9 @@
-<h1>{{.Slug}}</h1>
+{{define "title"}}{{.Slug}}{{end}}
 
+{{define "mainmenu"}}
 <p>[<a href="/edit/{{.Slug}}">edit</a>]</p>
+{{end}}
 
-<div>{{printf "%s" .Body | markdownToHTML}}</div>
+{{define "content"}}
+{{printf "%s" .Body | markdownToHTML}}
+{{end}}

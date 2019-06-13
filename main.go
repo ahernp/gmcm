@@ -26,7 +26,8 @@ func markdownToHTML(args ...interface{}) template.HTML {
     return template.HTML(s)
 }
 
-var templates, err = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/edit.html", "templates/view.html")
+var templates = make(map[string]*template.Template)
+
 var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
 
 func getSlug(w http.ResponseWriter, r *http.Request) (string, error) {
@@ -52,12 +53,13 @@ func loadPage(slug string) (*Page, error) {
     return &Page{Slug: slug, Body: body}, nil
 }
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-    err := templates.ExecuteTemplate(w, tmpl+".html", p)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
+func renderTemplate(w http.ResponseWriter, name string, p *Page) error {
+    template, ok := templates[name]
+    if !ok {
+        err := errors.New("Template not found -> " + name)
+        return err
     }
+    return template.ExecuteTemplate(w, "base", p)
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
@@ -108,6 +110,10 @@ func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+    templates["view"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/view.html", "templates/base.html")
+    templates["edit"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/edit.html", "templates/base.html")
+    fs := http.FileServer(http.Dir("static"))
+    http.Handle("/static/", http.StripPrefix("/static/", fs))
     http.HandleFunc("/", redirectToHomeHandler)
     http.HandleFunc("/pages/", makeHandler(viewHandler))
     http.HandleFunc("/edit/", makeHandler(editHandler))
