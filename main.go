@@ -85,10 +85,6 @@ func viewHandler(w http.ResponseWriter, r *http.Request, slug string) {
         http.Redirect(w, r, "/edit/"+slug, http.StatusFound)
         return
     }
-    extensions := parser.CommonExtensions | parser.AutoHeadingIDs
-    parser := parser.NewWithExtensions(extensions)
-    html := markdown.ToHTML(p.Body, parser, nil)
-    p.Body = []byte(template.HTML(html))
     renderTemplate(w, "view", p)
 }
 
