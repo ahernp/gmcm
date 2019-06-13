@@ -8,6 +8,7 @@ import (
     "log"
     "net/http"
     "regexp"
+    "strings"
 
     "github.com/gomarkdown/markdown"
     "github.com/gomarkdown/markdown/html"
@@ -98,7 +99,8 @@ func editHandler(w http.ResponseWriter, r *http.Request, slug string) {
 
 func saveHandler(w http.ResponseWriter, r *http.Request, slug string) {
     body := r.FormValue("body")
-    p := &Page{Slug: slug, Body: []byte(body)}
+    bodySansCarrigeReturns := strings.ReplaceAll(body, "\r", "")
+    p := &Page{Slug: slug, Body: []byte(bodySansCarrigeReturns)}
     err := p.save()
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
