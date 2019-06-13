@@ -6,15 +6,16 @@ import (
     "html/template"
     "io/ioutil"
     "log"
-    "github.com/gomarkdown/markdown"
-    "github.com/gomarkdown/markdown/parser"
     "net/http"
     "regexp"
+
+    "github.com/gomarkdown/markdown"
+    "github.com/gomarkdown/markdown/parser"
 )
 
 type Page struct {
-    Title string
-    Body  []byte
+    Slug string
+    Body []byte
 }
 
 func markdownToHTML(args ...interface{}) template.HTML {
@@ -26,29 +27,29 @@ func markdownToHTML(args ...interface{}) template.HTML {
 }
 
 var templates, err = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/edit.html", "templates/view.html")
-var validPath = regexp.MustCompile("^/(edit|save|pages)/([a-zA-Z0-9]+)$")
+var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
 
-func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
+func getSlug(w http.ResponseWriter, r *http.Request) (string, error) {
     m := validPath.FindStringSubmatch(r.URL.Path)
     if m == nil {
         http.NotFound(w, r)
-        return "", errors.New("Invalid Page Title")
+        return "", errors.New("Invalid Page Slug")
     }
-    return m[2], nil // The title is the second subexpression.
+    return m[2], nil // The slug is the second subexpression.
 }
 
 func (p *Page) save() error {
-    filename := "data/pages/" + p.Title + ".md"
+    filename := "data/pages/" + p.Slug + ".md"
     return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
-func loadPage(title string) (*Page, error) {
-    filename := "data/pages/" + title + ".md"
+func loadPage(slug string) (*Page, error) {
+    filename := "data/pages/" + slug + ".md"
     body, err := ioutil.ReadFile(filename)
     if err != nil {
         return nil, err
     }
-    return &Page{Title: title, Body: body}, nil
+    return &Page{Slug: slug, Body: body}, nil
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
@@ -70,10 +71,10 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
     }
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
-    p, err := loadPage(title)
+func viewHandler(w http.ResponseWriter, r *http.Request, slug string) {
+    p, err := loadPage(slug)
     if err != nil {
-        http.Redirect(w, r, "/edit/"+title, http.StatusFound)
+        http.Redirect(w, r, "/edit/"+slug, http.StatusFound)
         return
     }
     extensions := parser.CommonExtensions | parser.AutoHeadingIDs
@@ -83,23 +84,23 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
     renderTemplate(w, "view", p)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request, title string) {
-    p, err := loadPage(title)
+func editHandler(w http.ResponseWriter, r *http.Request, slug string) {
+    p, err := loadPage(slug)
     if err != nil {
-        p = &Page{Title: title}
+        p = &Page{Slug: slug}
     }
     renderTemplate(w, "edit", p)
 }
 
-func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
+func saveHandler(w http.ResponseWriter, r *http.Request, slug string) {
     body := r.FormValue("body")
-    p := &Page{Title: title, Body: []byte(body)}
+    p := &Page{Slug: slug, Body: []byte(body)}
     err := p.save()
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
-    http.Redirect(w, r, "/pages/"+title, http.StatusFound)
+    http.Redirect(w, r, "/pages/"+slug, http.StatusFound)
 }
 
 func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
