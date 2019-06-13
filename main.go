@@ -10,6 +10,7 @@ import (
     "regexp"
 
     "github.com/gomarkdown/markdown"
+    "github.com/gomarkdown/markdown/html"
     "github.com/gomarkdown/markdown/parser"
 )
 
@@ -22,7 +23,12 @@ func markdownToHTML(args ...interface{}) template.HTML {
     extensions := parser.CommonExtensions | parser.AutoHeadingIDs
     parser := parser.NewWithExtensions(extensions)
 
-    s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, nil)
+    htmlFlags := html.CommonFlags | html.HrefTargetBlank | html.TOC
+    opts := html.RendererOptions{Flags: htmlFlags}
+    renderer := html.NewRenderer(opts)
+
+    s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
+
     return template.HTML(s)
 }
 
