@@ -115,3 +115,7 @@ th, td {
     box-sizing: border-box;
     padding: 0em 0.5em;
 }
+
+nav {
+    display: none;
+}

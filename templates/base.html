@@ -16,6 +16,8 @@
             <hr>
             {{template "mainmenu" .}}
             <p><a href="/pages/markdown">Markdown</a></p>
+            <hr>
+            <button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()">ToC</button>
         </div>
         <div id="sidebar">
             <form action="/search" method="GET">
