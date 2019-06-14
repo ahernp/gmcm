@@ -1,9 +1,9 @@
-{{define "title"}}{{.Slug}}{{end}}
+{{define "title"}}{{.Page.Slug}}{{end}}
 
 {{define "mainmenu"}}
-<p><a href="/edit/{{.Slug}}">Edit</a></p>
+<p><a href="/edit/{{.Page.Slug}}">Edit</a></p>
 {{end}}
 
 {{define "content"}}
-{{printf "%s" .Body | markdownToHTML}}
+{{printf "%s" .Page.Body | markdownToHTML}}
 {{end}}

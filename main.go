@@ -10,7 +10,16 @@ import (
 	"strings"
 )
 
-var history = make([]string, 20)
+type Context struct {
+	Page    *Page
+	History []string
+}
+
+var context Context
+
+const historySize = 20
+
+var history = make([]string, historySize)
 
 var templates = make(map[string]*template.Template)
 
@@ -32,14 +41,14 @@ func writeHistory() error {
 }
 
 func updateHistory(slug string) {
-	newHistory := make([]string, 1, 20)
+	newHistory := make([]string, 1, historySize)
 	newHistory[0] = slug
 	for i := 0; i < len(history); i++ {
 		if history[i] != slug {
 			newHistory = append(newHistory, history[i])
 		}
 	}
-	history = newHistory[:20]
+	history = newHistory[:historySize]
 	writeHistory()
 }
 
@@ -49,7 +58,8 @@ func renderTemplate(w http.ResponseWriter, name string, p *Page) error {
 		err := errors.New("Template not found -> " + name)
 		return err
 	}
-	return template.ExecuteTemplate(w, "base", p)
+	context = Context{Page: p, History: history}
+	return template.ExecuteTemplate(w, "base", context)
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {

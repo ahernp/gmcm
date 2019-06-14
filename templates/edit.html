@@ -1,12 +1,12 @@
-{{define "title"}}Editing {{.Slug}}{{end}}
+{{define "title"}}Editing {{.Page.Slug}}{{end}}
 
 {{define "mainmenu"}}
-<p><a href="/pages/{{.Slug}}">View</a></p>
+<p><a href="/pages/{{.Page.Slug}}">View</a></p>
 {{end}}
 
 {{define "content"}}
-<form action="/save/{{.Slug}}" method="POST">
-    <div><textarea name="body" rows="20" cols="80">{{printf "%s" .Body}}</textarea></div>
+<form action="/save/{{.Page.Slug}}" method="POST">
+    <div><textarea name="body" rows="20" cols="80">{{printf "%s" .Page.Body}}</textarea></div>
     <div><input type="submit" value="Save"></div>
 </form>
 {{end}}

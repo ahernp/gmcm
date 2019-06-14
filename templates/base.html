@@ -13,6 +13,7 @@
     <body>
         <div id="mainmenu">
             <p><a href="/">Home</a></p>
+            <p><a href="/pages/task-list">Tash List</a></p>
             <hr>
             {{template "mainmenu" .}}
             <p><a href="/pages/markdown">Markdown</a></p>
@@ -29,6 +30,9 @@
                     autofocus>
             </form>
             <h3 title="Most recently read">History</h3>
+            {{range .History}}
+                <p><a href="/pages/{{.}}">{{.}}</a></p>
+            {{end}}
         </div>
         <div id="content">
             {{template "content" .}}
