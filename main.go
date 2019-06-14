@@ -37,15 +37,6 @@ var templates = make(map[string]*template.Template)
 
 var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
 
-func getSlug(w http.ResponseWriter, r *http.Request) (string, error) {
-    m := validPath.FindStringSubmatch(r.URL.Path)
-    if m == nil {
-        http.NotFound(w, r)
-        return "", errors.New("Invalid Page Slug")
-    }
-    return m[2], nil // The slug is the second subexpression.
-}
-
 func (p *Page) save() error {
     filename := "data/pages/" + p.Slug + ".md"
     return ioutil.WriteFile(filename, p.Body, 0600)
@@ -114,8 +105,11 @@ func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    templates["view"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/view.html", "templates/base.html")
-    templates["edit"], _ = template.New("").Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).ParseFiles("templates/edit.html", "templates/base.html")
+    templates["view"] = template.Must(template.New("").
+        Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).
+        ParseFiles("templates/view.html", "templates/base.html"))
+    templates["edit"] = template.Must(
+        template.ParseFiles("templates/edit.html", "templates/base.html"))
     staticFileServer := http.FileServer(http.Dir("static"))
     http.Handle("/static/", http.StripPrefix("/static/", staticFileServer))
     mediaFileServer := http.FileServer(http.Dir("media"))
