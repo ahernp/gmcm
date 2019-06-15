@@ -1,6 +1,10 @@
 package main
 
-import "strings"
+import (
+	"errors"
+	"net/http"
+	"strings"
+)
 
 type ContentMatch struct {
 	Slug    string
@@ -24,4 +28,20 @@ func search(searchTerm string) []string {
 	}
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches}
 	return nil
+}
+
+func renderSearchTemplate(w http.ResponseWriter, name string, searchTerm string) error {
+	template, ok := templates[name]
+	if !ok {
+		err := errors.New("Template not found -> " + name)
+		return err
+	}
+	search(searchTerm)
+	templateData = TemplateData{SearchResults: &searchResults, History: &history}
+	return template.ExecuteTemplate(w, "base", templateData)
+}
+
+func searchHandler(w http.ResponseWriter, r *http.Request) {
+	searchTerm := r.FormValue("search")
+	renderSearchTemplate(w, "search", searchTerm)
 }

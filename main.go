@@ -7,9 +7,18 @@ import (
 	"os"
 )
 
-const port = ":7713"
+// TemplateData used when rendering templates
+type TemplateData struct {
+	Page          *Page
+	History       *[]string
+	Sitemap       *[]os.FileInfo
+	SearchResults *SearchResults
+}
 
-var sitemap []os.FileInfo
+var templateData TemplateData
+var templates = make(map[string]*template.Template)
+
+const port = ":7713"
 
 func main() {
 	history = readHistory()
