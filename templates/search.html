@@ -9,13 +9,23 @@
 {{define "content"}}
 <h1>Search Results</h1>
 <p>Matches for "{{.SearchResults.SearchTerm}}":</p>
-{{range .SearchResults.NameMatches}}
-    <p><a href="/pages/{{.}}">{{.}}</a></p>
-{{end}}
-{{range .SearchResults.ContentMatches}}
-    <p>
-        <a href="/pages/{{.Slug}}">{{.Slug}}</a>:<br>
-        {{.Content}}
-    </p>
-{{end}}
+<ul>
+    <li>Names:
+        <ul>
+            {{range .SearchResults.NameMatches}}
+                <li><a href="/pages/{{.}}">{{.}}</a></li>
+            {{end}}
+        </ul>
+    </li>
+    <li>Content:
+        <ul>
+            {{range .SearchResults.ContentMatches}}
+                <li>
+                    <a href="/pages/{{.Slug}}">{{.Slug}}</a>:<br>
+                    {{.Content}}
+                </li>
+            {{end}}
+        </ul>
+    </li>
+</ul>
 {{end}}

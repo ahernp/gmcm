@@ -21,28 +21,31 @@ type SearchResults struct {
 var searchResults SearchResults
 
 func search(searchTerm string) []string {
-	nameMatches := make([]string, 1, len(sitemap))
+	var nameMatches []string
 	for i := 0; i < len(sitemap); i++ {
 		if strings.Contains(sitemap[i].Name(), searchTerm) {
 			nameMatches = append(nameMatches, sitemap[i].Name())
 		}
 	}
+
 	grepString := "grep " + searchTerm + " data/pages/*"
 	grepCmd := exec.Command("/bin/sh", "-c", grepString)
 	grepResult, _ := grepCmd.Output()
 
 	grepResults := strings.Split(string(grepResult[:]), "\n")
-	contentMatches := make([]ContentMatch, len(grepResults))
+	var contentMatches []ContentMatch
 	for i := 0; i < len(grepResults); i++ {
 		s := strings.SplitAfterN(grepResults[i], ":", 2)
 		if len(s) > 1 {
 			filePath := s[0][0 : len(s[0])-1]
 			content := s[1]
-			contentMatches[i] = ContentMatch{
-				Slug:    strings.ReplaceAll(filePath, "data/pages/", ""),
-				Content: strings.ReplaceAll(content, searchTerm, "<b>"+searchTerm+"</b>")}
+			contentMatches = append(contentMatches,
+				ContentMatch{
+					Slug:    strings.ReplaceAll(filePath, "data/pages/", ""),
+					Content: strings.ReplaceAll(content, searchTerm, "<b>"+searchTerm+"</b>")})
 		}
 	}
+
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches, ContentMatches: contentMatches}
 	return nil
 }
