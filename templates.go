@@ -6,12 +6,12 @@ import (
 	"net/http"
 )
 
-type Context struct {
+type TemplateData struct {
 	Page    *Page
-	History []string
+	History *[]string
 }
 
-var context Context
+var templateData TemplateData
 
 var templates = make(map[string]*template.Template)
 
@@ -21,6 +21,6 @@ func renderTemplate(w http.ResponseWriter, name string, p *Page) error {
 		err := errors.New("Template not found -> " + name)
 		return err
 	}
-	context = Context{Page: p, History: history}
-	return template.ExecuteTemplate(w, "base", context)
+	templateData = TemplateData{Page: p, History: &history}
+	return template.ExecuteTemplate(w, "base", templateData)
 }

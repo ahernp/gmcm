@@ -11,8 +11,8 @@ import (
 )
 
 type Page struct {
-	Slug string
-	Body []byte
+	Slug    string
+	Content []byte
 }
 
 func markdownToHTML(args ...interface{}) template.HTML {
@@ -30,14 +30,14 @@ func markdownToHTML(args ...interface{}) template.HTML {
 
 func (p *Page) save() error {
 	filename := "data/pages/" + p.Slug + ".md"
-	return ioutil.WriteFile(filename, p.Body, 0600)
+	return ioutil.WriteFile(filename, p.Content, 0600)
 }
 
 func loadPage(slug string) (*Page, error) {
 	filename := "data/pages/" + slug + ".md"
-	body, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	return &Page{Slug: slug, Body: body}, nil
+	return &Page{Slug: slug, Content: content}, nil
 }
