@@ -13,6 +13,7 @@ var sitemap []os.FileInfo
 
 func main() {
 	history = readHistory()
+	sitemap, _ = listPages()
 
 	templates["view"] = template.Must(template.New("").
 		Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).
@@ -21,6 +22,8 @@ func main() {
 		template.ParseFiles("templates/edit.html", "templates/base.html"))
 	templates["sitemap"] = template.Must(
 		template.ParseFiles("templates/sitemap.html", "templates/base.html"))
+	templates["search"] = template.Must(
+		template.ParseFiles("templates/search.html", "templates/base.html"))
 
 	staticFileServer := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", staticFileServer))
@@ -32,6 +35,7 @@ func main() {
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
 	http.HandleFunc("/sitemap/", sitemapHandler)
+	http.HandleFunc("/search/", searchHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }

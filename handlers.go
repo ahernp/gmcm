@@ -62,3 +62,8 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	sitemap = files
 	renderSitemapTemplate(w, "sitemap", &sitemap)
 }
+
+func searchHandler(w http.ResponseWriter, r *http.Request) {
+	searchTerm := r.FormValue("search")
+	renderSearchTemplate(w, "search", searchTerm)
+}

@@ -7,10 +7,12 @@ import (
 	"os"
 )
 
+// TemplateData used when rendering templates
 type TemplateData struct {
-	Page    *Page
-	History *[]string
-	Sitemap *[]os.FileInfo
+	Page          *Page
+	History       *[]string
+	Sitemap       *[]os.FileInfo
+	SearchResults *SearchResults
 }
 
 var templateData TemplateData
@@ -34,5 +36,16 @@ func renderSitemapTemplate(w http.ResponseWriter, name string, sitemap *[]os.Fil
 		return err
 	}
 	templateData = TemplateData{Sitemap: sitemap, History: &history}
+	return template.ExecuteTemplate(w, "base", templateData)
+}
+
+func renderSearchTemplate(w http.ResponseWriter, name string, searchTerm string) error {
+	template, ok := templates[name]
+	if !ok {
+		err := errors.New("Template not found -> " + name)
+		return err
+	}
+	search(searchTerm)
+	templateData = TemplateData{SearchResults: &searchResults, History: &history}
 	return template.ExecuteTemplate(w, "base", templateData)
 }

@@ -1,0 +1,15 @@
+{{define "title"}}Search Results{{end}}
+
+{{define "mainmenu"}}{{end}}
+
+{{define "toctoggle"}}{{end}}
+
+{{define "searchterm"}}value="{{.SearchResults.SearchTerm}}"{{end}}
+
+{{define "content"}}
+<h1>Search Results</h1>
+<p>Matches for "{{.SearchResults.SearchTerm}}":</p>
+{{range .SearchResults.NameMatches}}
+    <p><a href="/pages/{{.}}">{{.}}</a></p>
+{{end}}
+{{end}}

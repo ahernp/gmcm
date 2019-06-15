@@ -9,6 +9,8 @@
 <button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()">ToC</button>
 {{end}}
 
+{{define "searchterm"}}{{end}}
+
 {{define "content"}}
 {{printf "%s" .Page.Content | markdownToHTML}}
 {{end}}

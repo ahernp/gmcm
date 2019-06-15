@@ -22,7 +22,7 @@
             <hr>
             {{template "mainmenu" .}}
             <p><a href="/pages/markdown">Markdown</a></p>
-            {{template "toctoggle"}}
+            {{template "toctoggle" .}}
         </div>
         <div id="sidebar">
             <form action="/search" method="GET">
@@ -30,6 +30,7 @@
                     id="search_string"
                     type="text"
                     name="search"
+                    {{template "searchterm" .}}
                     placeholder="Search"
                     autofocus>
             </form>
