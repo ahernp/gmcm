@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+const port = ":7713"
+
+var sitemap []string
+
 func main() {
 	history = readHistory()
 
@@ -14,6 +18,8 @@ func main() {
 		ParseFiles("templates/view.html", "templates/base.html"))
 	templates["edit"] = template.Must(
 		template.ParseFiles("templates/edit.html", "templates/base.html"))
+	templates["sitemap"] = template.Must(
+		template.ParseFiles("templates/sitemap.html", "templates/base.html"))
 
 	staticFileServer := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", staticFileServer))
@@ -24,6 +30,7 @@ func main() {
 	http.HandleFunc("/pages/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.HandleFunc("/sitemap/", sitemapHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(port, nil))
 }

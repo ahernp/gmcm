@@ -1,0 +1,12 @@
+{{define "title"}}Sitemap{{end}}
+
+{{define "mainmenu"}}{{end}}
+
+{{define "toctoggle"}}{{end}}
+
+{{define "content"}}
+<h1>Sitemap</h1>
+{{range .Sitemap}}
+    <p><a href="/pages/{{.}}">{{.}}</a></p>
+{{end}}
+{{end}}

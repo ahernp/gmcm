@@ -52,3 +52,13 @@ func saveHandler(w http.ResponseWriter, r *http.Request, slug string) {
 func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/pages/home", http.StatusFound)
 }
+
+func sitemapHandler(w http.ResponseWriter, r *http.Request) {
+	pages, err := listPages()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sitemap = strings.Split(strings.ReplaceAll(pages, ".md\n", " "), " ")
+	renderSitemapTemplate(w, "sitemap", &sitemap)
+}

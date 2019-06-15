@@ -10,6 +10,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
+// Page containing Markdown text
 type Page struct {
 	Slug    string
 	Content []byte
