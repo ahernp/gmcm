@@ -19,6 +19,7 @@ var templateData TemplateData
 var templates = make(map[string]*template.Template)
 
 const port = ":7713"
+const pagesPath = "data/pages/"
 
 func main() {
 	history = readHistory()

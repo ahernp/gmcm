@@ -28,7 +28,7 @@ func search(searchTerm string) []string {
 		}
 	}
 
-	grepString := "grep " + searchTerm + " data/pages/*"
+	grepString := "grep " + searchTerm + " " + pagesPath + "*"
 	grepCmd := exec.Command("/bin/sh", "-c", grepString)
 	grepResult, _ := grepCmd.Output()
 
@@ -41,7 +41,7 @@ func search(searchTerm string) []string {
 			content := s[1]
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug:    strings.ReplaceAll(filePath, "data/pages/", ""),
+					Slug:    strings.ReplaceAll(filePath, pagesPath, ""),
 					Content: strings.ReplaceAll(content, searchTerm, "<b>"+searchTerm+"</b>")})
 		}
 	}

@@ -36,12 +36,12 @@ func markdownToHTML(args ...interface{}) template.HTML {
 }
 
 func (p *Page) save() error {
-	filename := "data/pages/" + p.Slug
+	filename := pagesPath + p.Slug
 	return ioutil.WriteFile(filename, p.Content, 0600)
 }
 
 func loadPage(slug string) (*Page, error) {
-	filename := "data/pages/" + slug
+	filename := pagesPath + slug
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err

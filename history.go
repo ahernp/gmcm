@@ -25,8 +25,7 @@ func writeHistory() error {
 }
 
 func updateHistory(slug string) {
-	newHistory := make([]string, 1, historySize)
-	newHistory[0] = slug
+	newHistory := []string{slug}
 	for i := 0; i < len(history); i++ {
 		if history[i] != slug {
 			newHistory = append(newHistory, history[i])

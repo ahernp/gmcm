@@ -11,7 +11,7 @@ import (
 var sitemap []os.FileInfo
 
 func listPages() ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir("data/pages")
+	files, err := ioutil.ReadDir(pagesPath)
 
 	if err != nil {
 		fmt.Printf("%s\n", err)
