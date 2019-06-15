@@ -4,6 +4,8 @@
 <p><a href="/pages/{{.Page.Slug}}">View</a></p>
 {{end}}
 
+{{define "toctoggle"}}{{end}}
+
 {{define "content"}}
 <form action="/save/{{.Page.Slug}}" method="POST">
     <div><textarea name="body" rows="20" cols="80">{{printf "%s" .Page.Body}}</textarea></div>

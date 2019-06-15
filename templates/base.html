@@ -17,8 +17,7 @@
             <hr>
             {{template "mainmenu" .}}
             <p><a href="/pages/markdown">Markdown</a></p>
-            <hr>
-            <button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()">ToC</button>
+            {{template "toctoggle"}}
         </div>
         <div id="sidebar">
             <form action="/search" method="GET">
@@ -45,7 +44,7 @@
             $(document).ready(function() {
                 $.fancybox.defaults.loop = true;
                 $("a:has(img)").not("#logo").attr({"data-fancybox": "gallery", "data-caption": function(i, val) {return $(this).children("img:first").attr("title")}});
-                $('table').not('.non-datatable').DataTable();
+                $('table').not('.non-datatable').DataTable({"aaSorting": []});
                 $('select').select2();
             });
         </script>

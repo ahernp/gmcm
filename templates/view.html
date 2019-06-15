@@ -4,6 +4,11 @@
 <p><a href="/edit/{{.Page.Slug}}">Edit</a></p>
 {{end}}
 
+{{define "toctoggle"}}
+<hr>
+<button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()">ToC</button>
+{{end}}
+
 {{define "content"}}
 {{printf "%s" .Page.Body | markdownToHTML}}
 {{end}}
