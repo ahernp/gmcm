@@ -4,14 +4,17 @@ import (
 	"errors"
 	"net/http"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
+// ContentMatch documents a page content match
 type ContentMatch struct {
 	Slug    string
 	Content string
 }
 
+// SearchResults contains all the matches found
 type SearchResults struct {
 	SearchTerm     string
 	NameMatches    []string
@@ -22,13 +25,14 @@ var searchResults SearchResults
 
 func search(searchTerm string) []string {
 	var nameMatches []string
+	re := regexp.MustCompile(`(?i)` + searchTerm)
 	for i := 0; i < len(sitemap); i++ {
-		if strings.Contains(sitemap[i].Name(), searchTerm) {
+		if strings.Contains(sitemap[i].Name(), strings.ToLower(searchTerm)) {
 			nameMatches = append(nameMatches, sitemap[i].Name())
 		}
 	}
 
-	grepString := "grep " + searchTerm + " " + pagesPath + "*"
+	grepString := "grep -i " + searchTerm + " " + pagesPath + "*"
 	grepCmd := exec.Command("/bin/sh", "-c", grepString)
 	grepResult, _ := grepCmd.Output()
 
@@ -42,7 +46,7 @@ func search(searchTerm string) []string {
 			contentMatches = append(contentMatches,
 				ContentMatch{
 					Slug:    strings.ReplaceAll(filePath, pagesPath, ""),
-					Content: strings.ReplaceAll(content, searchTerm, "<b>"+searchTerm+"</b>")})
+					Content: re.ReplaceAllString(content, "<b>"+searchTerm+"</b>")})
 		}
 	}
 
