@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
+	"io/ioutil"
+	"os"
 )
 
-func listPages() (string, error) {
-	out, err := exec.Command("ls", "data/pages").Output()
+func listPages() ([]os.FileInfo, error) {
+	files, err := ioutil.ReadDir("data/pages")
 
 	if err != nil {
 		fmt.Printf("%s\n", err)
 	}
 
-	return string(out[:]), err
+	return files, err
 }

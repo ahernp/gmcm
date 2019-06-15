@@ -4,12 +4,13 @@ import (
 	"errors"
 	"html/template"
 	"net/http"
+	"os"
 )
 
 type TemplateData struct {
 	Page    *Page
 	History *[]string
-	Sitemap *[]string
+	Sitemap *[]os.FileInfo
 }
 
 var templateData TemplateData
@@ -26,7 +27,7 @@ func renderTemplate(w http.ResponseWriter, name string, p *Page) error {
 	return template.ExecuteTemplate(w, "base", templateData)
 }
 
-func renderSitemapTemplate(w http.ResponseWriter, name string, sitemap *[]string) error {
+func renderSitemapTemplate(w http.ResponseWriter, name string, sitemap *[]os.FileInfo) error {
 	template, ok := templates[name]
 	if !ok {
 		err := errors.New("Template not found -> " + name)

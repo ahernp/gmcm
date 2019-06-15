@@ -6,7 +6,20 @@
 
 {{define "content"}}
 <h1>Sitemap</h1>
-{{range .Sitemap}}
-    <p><a href="/pages/{{.}}">{{.}}</a></p>
-{{end}}
+<table>
+    <thead>
+        <tr>
+            <th>Page</th>
+            <th>Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range .Sitemap}}
+            <tr>
+                <td><a href="/pages/{{.Name}}">{{.Name}}</a></td>
+                <td>{{.ModTime}}</td>
+            </tr>
+        {{end}}
+    </tbody>
+</table>
 {{end}}

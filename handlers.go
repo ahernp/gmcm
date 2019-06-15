@@ -54,11 +54,11 @@ func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
-	pages, err := listPages()
+	files, err := listPages()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sitemap = strings.Split(strings.ReplaceAll(pages, ".md\n", " "), " ")
+	sitemap = files
 	renderSitemapTemplate(w, "sitemap", &sitemap)
 }

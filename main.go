@@ -4,11 +4,12 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 const port = ":7713"
 
-var sitemap []string
+var sitemap []os.FileInfo
 
 func main() {
 	history = readHistory()
