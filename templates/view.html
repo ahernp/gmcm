@@ -1,12 +1,9 @@
 {{define "title"}}{{.Page.Slug}}{{end}}
 
-{{define "mainmenu"}}
+{{define "mainmenu-extra"}}
 <p><a href="/edit/{{.Page.Slug}}">Edit</a></p>
-{{end}}
-
-{{define "toctoggle"}}
 <hr>
-<button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()">ToC</button>
+<button title="Toggle display of page Table of Contents" onClick="$('nav').toggle()" class="pure-button">ToC</button>
 {{end}}
 
 {{define "searchterm"}}{{end}}

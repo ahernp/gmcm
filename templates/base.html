@@ -12,16 +12,14 @@
     <body>
         <div id="mainmenu">
             <p><a href="/">Home</a></p>
-            <p><a href="/pages/task-list">Task List</a></p>
+            <p><a href="/pages/task-list">Tasks</a></p>
             <hr>
             <p><a href="/media/">Media</a></p>
             <p><a href="/sitemap">Sitemap</a></p>
             <p><a href="/timers">Timers</a></p>
             <p><a href="/tools">Tools</a></p>
             <hr>
-            {{template "mainmenu" .}}
-            <p><a href="/pages/markdown">Markdown</a></p>
-            {{template "toctoggle" .}}
+            {{template "mainmenu-extra" .}}
         </div>
         <div id="sidebar">
             <form action="/search" method="GET">

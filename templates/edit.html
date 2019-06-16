@@ -1,16 +1,15 @@
 {{define "title"}}Editing {{.Page.Slug}}{{end}}
 
-{{define "mainmenu"}}
+{{define "mainmenu-extra"}}
 <p><a href="/pages/{{.Page.Slug}}">View</a></p>
 {{end}}
-
-{{define "toctoggle"}}{{end}}
 
 {{define "searchterm"}}{{end}}
 
 {{define "content"}}
-<form action="/save/{{.Page.Slug}}" method="POST">
-    <div><textarea name="content" rows="20" cols="80">{{printf "%s" .Page.Content}}</textarea></div>
-    <div><input type="submit" value="Save"></div>
+<form action="/save/{{.Page.Slug}}" method="POST" class="pure-form pure-form-stacked">
+    <label for="content">Edit Markdown content</label>
+    <textarea name="content" rows="20" cols="80">{{printf "%s" .Page.Content}}</textarea>
+    <button type="submit" class="pure-button pure-button-primary">Save</button>
 </form>
 {{end}}
