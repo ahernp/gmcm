@@ -1,13 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"html/template"
+	htmlTemplate "html/template"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strings"
+	textTemplate "text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -21,8 +21,13 @@ type Page struct {
 }
 
 var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
+var viewPageTemplate = textTemplate.Must(textTemplate.New("").
+	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).
+	ParseFiles("templates/view.html", "templates/base.html"))
+var editPageTemplate = htmlTemplate.Must(
+	htmlTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
 
-func markdownToHTML(args ...interface{}) template.HTML {
+func markdownToHTML(args ...interface{}) string {
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
 
@@ -32,7 +37,7 @@ func markdownToHTML(args ...interface{}) template.HTML {
 
 	s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
 
-	return template.HTML(s)
+	return string(s)
 }
 
 func (p *Page) save() error {
@@ -50,16 +55,14 @@ func loadPage(slug string) (*Page, error) {
 }
 
 func renderPageTemplate(w http.ResponseWriter, name string, p *Page) error {
-	template, ok := templates[name]
-	if !ok {
-		err := errors.New("Template not found -> " + name)
-		return err
-	}
 	templateData = TemplateData{Page: p, History: &history}
-	return template.ExecuteTemplate(w, "base", templateData)
+	if name == "edit" {
+		return editPageTemplate.ExecuteTemplate(w, "base", templateData)
+	}
+	return viewPageTemplate.ExecuteTemplate(w, "base", templateData)
 }
 
-func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+func makePageHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := validPath.FindStringSubmatch(r.URL.Path)
 		if m == nil {
@@ -70,7 +73,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func viewPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	p, err := loadPage(slug)
 	if err != nil {
 		http.Redirect(w, r, "/edit/"+slug, http.StatusFound)
@@ -80,7 +83,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	renderPageTemplate(w, "view", p)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func editPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	p, err := loadPage(slug)
 	if err != nil {
 		p = &Page{Slug: slug}
@@ -88,7 +91,7 @@ func editHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	renderPageTemplate(w, "edit", p)
 }
 
-func saveHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func savePageHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	content := r.FormValue("content")
 	contentSansCarriageReturns := strings.ReplaceAll(content, "\r", "")
 	p := &Page{Slug: slug, Content: []byte(contentSansCarriageReturns)}

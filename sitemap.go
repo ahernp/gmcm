@@ -1,14 +1,16 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 var sitemap []os.FileInfo
+var sitemapTemplate = template.Must(
+	template.ParseFiles("templates/sitemap.html", "templates/base.html"))
 
 func listPages() ([]os.FileInfo, error) {
 	files, err := ioutil.ReadDir(pagesPath)
@@ -20,14 +22,9 @@ func listPages() ([]os.FileInfo, error) {
 	return files, err
 }
 
-func renderSitemapTemplate(w http.ResponseWriter, name string, sitemap *[]os.FileInfo) error {
-	template, ok := templates[name]
-	if !ok {
-		err := errors.New("Template not found -> " + name)
-		return err
-	}
+func renderSitemapTemplate(w http.ResponseWriter, sitemap *[]os.FileInfo) error {
 	templateData = TemplateData{Sitemap: sitemap, History: &history}
-	return template.ExecuteTemplate(w, "base", templateData)
+	return sitemapTemplate.ExecuteTemplate(w, "base", templateData)
 }
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,5 +34,5 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sitemap = files
-	renderSitemapTemplate(w, "sitemap", &sitemap)
+	renderSitemapTemplate(w, &sitemap)
 }

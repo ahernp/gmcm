@@ -1,11 +1,11 @@
 package main
 
 import (
-	"errors"
 	"net/http"
 	"os/exec"
 	"regexp"
 	"strings"
+	"text/template"
 )
 
 // ContentMatch documents a page content match
@@ -22,6 +22,8 @@ type SearchResults struct {
 }
 
 var searchResults SearchResults
+var searchTemplate = template.Must(
+	template.ParseFiles("templates/search.html", "templates/base.html"))
 
 func search(searchTerm string) []string {
 	var nameMatches []string
@@ -54,18 +56,13 @@ func search(searchTerm string) []string {
 	return nil
 }
 
-func renderSearchTemplate(w http.ResponseWriter, name string, searchTerm string) error {
-	template, ok := templates[name]
-	if !ok {
-		err := errors.New("Template not found -> " + name)
-		return err
-	}
+func renderSearchTemplate(w http.ResponseWriter, searchTerm string) error {
 	search(searchTerm)
 	templateData = TemplateData{SearchResults: &searchResults, History: &history}
-	return template.ExecuteTemplate(w, "base", templateData)
+	return searchTemplate.ExecuteTemplate(w, "base", templateData)
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	searchTerm := r.FormValue("search")
-	renderSearchTemplate(w, "search", searchTerm)
+	renderSearchTemplate(w, searchTerm)
 }
