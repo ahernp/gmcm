@@ -30,7 +30,12 @@
     <tbody>
         {{range .UploadedFiles}}
             <tr>
-                <td><a href="/media/{{.Dir}}/{{.File.Name}}">{{.File.Name}}</a></td>
+                <td>
+                    {{if or (eq .Dir "img") (eq .Dir "thumb")}}
+                        <a href="/media/{{.Dir}}/{{.File.Name}}"><img src="/media/{{.Dir}}/{{.File.Name}}" alt="{{.File.Name}}" title="{{.File.Name}}" style="max-width:50%"/></a>
+                    {{end}}
+                    <a href="/media/{{.Dir}}/{{.File.Name}}">{{.File.Name}}</a>
+                </td>
                 <td>{{.Dir}}</td>
                 <td>{{.File.ModTime}}</td>
             </tr>

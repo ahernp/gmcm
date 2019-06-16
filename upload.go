@@ -13,11 +13,11 @@ type UploadedFile struct {
 	File os.FileInfo
 }
 
-var uploadDirs = [...]string{"img", "code", "doc", "pres", "thumb"}
+var uploadDirs = [...]string{"img", "code", "doc", "thumb"}
 var uploadedFiles = getUploadedFiles()
 
 var uploadTemplate = template.Must(
-	template.ParseFiles("templates/upload.html", "templates/base.html"))
+	template.ParseFiles("templates/uploads.html", "templates/base.html"))
 
 func getUploadedFiles() []UploadedFile {
 	var uploadedFiles []UploadedFile

@@ -31,7 +31,7 @@ func main() {
 	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
 	http.HandleFunc("/search/", searchHandler)
-	http.HandleFunc("/upload/", uploadHandler)
+	http.HandleFunc("/uploads/", uploadHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }
