@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// UploadedFile for use in listing uploads
 type UploadedFile struct {
 	Dir  string
 	File os.FileInfo

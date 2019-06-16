@@ -39,7 +39,7 @@ func markdownToHTML(args ...interface{}) string {
 
 	s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
 
-	return string(s)
+	return strings.ReplaceAll(string(s), "&amp;#", "&#")
 }
 
 func (p *Page) save() error {
