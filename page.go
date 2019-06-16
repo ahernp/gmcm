@@ -64,18 +64,16 @@ func renderPageTemplate(w http.ResponseWriter, name string, p *Page) error {
 	return viewPageTemplate.ExecuteTemplate(w, "base", templateData)
 }
 
-func makePageHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		m := validPath.FindStringSubmatch(r.URL.Path)
-		if m == nil {
-			http.NotFound(w, r)
-			return
-		}
-		fn(w, r, m[2])
+func getSlug(w http.ResponseWriter, r *http.Request) string {
+	regexResult := validPath.FindStringSubmatch(r.URL.Path)
+	if regexResult == nil {
+		return ""
 	}
+	return regexResult[2]
 }
 
-func viewPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func viewPageHandler(w http.ResponseWriter, r *http.Request) {
+	slug := getSlug(w, r)
 	p, err := loadPage(slug)
 	if err != nil {
 		http.Redirect(w, r, "/edit/"+slug, http.StatusFound)
@@ -85,7 +83,8 @@ func viewPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	renderPageTemplate(w, "view", p)
 }
 
-func editPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func editPageHandler(w http.ResponseWriter, r *http.Request) {
+	slug := getSlug(w, r)
 	p, err := loadPage(slug)
 	if err != nil {
 		p = &Page{Slug: slug}
@@ -93,7 +92,8 @@ func editPageHandler(w http.ResponseWriter, r *http.Request, slug string) {
 	renderPageTemplate(w, "edit", p)
 }
 
-func savePageHandler(w http.ResponseWriter, r *http.Request, slug string) {
+func savePageHandler(w http.ResponseWriter, r *http.Request) {
+	slug := getSlug(w, r)
 	content := r.FormValue("content")
 	contentSansCarriageReturns := strings.ReplaceAll(content, "\r", "")
 	p := &Page{Slug: slug, Content: []byte(contentSansCarriageReturns)}

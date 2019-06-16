@@ -25,9 +25,9 @@ func main() {
 	http.Handle("/media/", http.StripPrefix("/media/", mediaFileServer))
 
 	http.HandleFunc("/", redirectToHomeHandler)
-	http.HandleFunc("/pages/", makePageHandler(viewPageHandler))
-	http.HandleFunc("/edit/", makePageHandler(editPageHandler))
-	http.HandleFunc("/save/", makePageHandler(savePageHandler))
+	http.HandleFunc("/pages/", viewPageHandler)
+	http.HandleFunc("/edit/", editPageHandler)
+	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
 	http.HandleFunc("/search/", searchHandler)
 

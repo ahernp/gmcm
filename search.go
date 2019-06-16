@@ -25,7 +25,7 @@ var searchResults SearchResults
 var searchTemplate = template.Must(
 	template.ParseFiles("templates/search.html", "templates/base.html"))
 
-func search(searchTerm string) []string {
+func search(searchTerm string) {
 	var nameMatches []string
 	re := regexp.MustCompile(`(?i)` + searchTerm)
 	for i := 0; i < len(sitemap); i++ {
@@ -53,7 +53,6 @@ func search(searchTerm string) []string {
 	}
 
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches, ContentMatches: contentMatches}
-	return nil
 }
 
 func renderSearchTemplate(w http.ResponseWriter, searchTerm string) error {
