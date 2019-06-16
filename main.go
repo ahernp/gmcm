@@ -12,6 +12,7 @@ type TemplateData struct {
 	History       *[]string
 	Sitemap       *[]os.FileInfo
 	SearchResults *SearchResults
+	UploadedFiles *[]UploadedFile
 }
 
 var templateData TemplateData
@@ -30,6 +31,7 @@ func main() {
 	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
 	http.HandleFunc("/search/", searchHandler)
+	http.HandleFunc("/upload/", uploadHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }

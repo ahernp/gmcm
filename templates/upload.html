@@ -1,0 +1,39 @@
+{{define "title"}}Uploads{{end}}
+
+{{define "mainmenu-extra"}}{{end}}
+
+{{define "searchterm"}}{{end}}
+
+{{define "content"}}
+<form action="/upload/" method="post" class="pure-form" enctype="multipart/form-data">
+    <label for="content">Upload file</label>
+    <input type="file" name="newFile" />
+    <select name="dir">
+        <option value="img">img</option>
+        <option value="code">code</option>
+        <option value="doc">doc</option>
+        <option value="pres">pres</option>
+        <option value="thumb">thumb</option>
+    </select>
+    <button type="submit" class="pure-button pure-button-primary">Upload</button>
+</form>
+<h2>Uploaded Files</h2>
+<table>
+    <thead>
+        <tr>
+            <th>File</th>
+            <th>Dir</th>
+            <th>Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range .UploadedFiles}}
+            <tr>
+                <td><a href="/media/{{.Dir}}/{{.File.Name}}">{{.File.Name}}</a></td>
+                <td>{{.Dir}}</td>
+                <td>{{.File.ModTime}}</td>
+            </tr>
+        {{end}}
+    </tbody>
+</table>
+{{end}}

@@ -1,11 +1,11 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
 	"os/exec"
 	"regexp"
 	"strings"
-	"text/template"
 )
 
 // ContentMatch documents a page content match
