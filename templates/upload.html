@@ -6,8 +6,9 @@
 
 {{define "content"}}
 <form action="/upload/" method="post" class="pure-form" enctype="multipart/form-data">
-    <label for="content">Upload file</label>
+    <label for="content">Upload file:</label>
     <input type="file" name="newFile" />
+    <label for="dir">Directory:</label>
     <select name="dir">
         <option value="img">img</option>
         <option value="code">code</option>
