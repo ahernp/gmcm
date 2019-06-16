@@ -7,7 +7,6 @@
         <link href="/static/css/pure-min.css" rel="stylesheet" />
         <link href="/static/css/jquery.fancybox-3.5.7.min.css" rel="stylesheet" />
         <link href="/static/css/jquery.dataTables-1.10.18.min.css" rel="stylesheet">
-        <link href="/static/css/select2-4.0.7.min.css" rel="stylesheet">
         <link href="/static/css/styles.css" rel="stylesheet">
     </head>
     <body>
@@ -45,13 +44,11 @@
         <script src="/static/js/jquery-3.4.1.min.js"></script>
         <script src="/static/js/jquery.fancybox-3.5.7.min.js"></script>
         <script src="/static/js/jquery.dataTables-1.10.18.min.js"></script>
-        <script src="/static/js/select2-4.0.7.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $.fancybox.defaults.loop = true;
                 $("a:has(img)").not("#logo").attr({"data-fancybox": "gallery", "data-caption": function(i, val) {return $(this).children("img:first").attr("title")}});
                 $('table').not('.non-datatable').DataTable({"aaSorting": []});
-                $('select').select2();
             });
         </script>
     </body>

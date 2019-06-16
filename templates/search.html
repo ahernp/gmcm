@@ -8,11 +8,11 @@
 
 {{define "content"}}
 <h1>Search Results</h1>
-<p>Matches for "{{.SearchResults.SearchTerm}}":</p>
+<p>Page matches for "{{.SearchResults.SearchTerm}}":</p>
     {{if or .SearchResults.NameMatches .SearchResults.ContentMatches}}
         <ul>
             {{if .SearchResults.NameMatches}}
-            <li>Names ({{len .SearchResults.NameMatches}} found):
+            <li>Slugs ({{len .SearchResults.NameMatches}} found):
                 <ul>
                     {{range .SearchResults.NameMatches}}
                         <li><a href="/pages/{{.}}">{{.}}</a></li>
