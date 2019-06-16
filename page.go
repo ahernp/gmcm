@@ -20,6 +20,8 @@ type Page struct {
 	Content []byte
 }
 
+const pagesPath = "data/pages/"
+
 var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
 var viewPageTemplate = textTemplate.Must(textTemplate.New("").
 	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).

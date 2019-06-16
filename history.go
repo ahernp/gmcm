@@ -7,7 +7,7 @@ import (
 
 const historySize = 20
 
-var history = make([]string, historySize)
+var history = readHistory()
 
 func readHistory() []string {
 	filename := "data/history.txt"

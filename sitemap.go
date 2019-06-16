@@ -8,7 +8,8 @@ import (
 	"text/template"
 )
 
-var sitemap []os.FileInfo
+var sitemap, _ = listPages()
+
 var sitemapTemplate = template.Must(
 	template.ParseFiles("templates/sitemap.html", "templates/base.html"))
 

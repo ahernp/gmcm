@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// TemplateData used when rendering templates
+// TemplateData context used to render templates
 type TemplateData struct {
 	Page          *Page
 	History       *[]string
@@ -17,12 +17,8 @@ type TemplateData struct {
 var templateData TemplateData
 
 const port = ":7713"
-const pagesPath = "data/pages/"
 
 func main() {
-	history = readHistory()
-	sitemap, _ = listPages()
-
 	staticFileServer := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", staticFileServer))
 	mediaFileServer := http.FileServer(http.Dir("media"))
