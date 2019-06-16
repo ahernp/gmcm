@@ -56,14 +56,6 @@ func loadPage(slug string) (*Page, error) {
 	return &Page{Slug: slug, Content: content}, nil
 }
 
-func renderPageTemplate(w http.ResponseWriter, name string, p *Page) error {
-	templateData = TemplateData{Page: p, History: &history}
-	if name == "edit" {
-		return editPageTemplate.ExecuteTemplate(w, "base", templateData)
-	}
-	return viewPageTemplate.ExecuteTemplate(w, "base", templateData)
-}
-
 func getSlug(w http.ResponseWriter, r *http.Request) string {
 	regexResult := validPath.FindStringSubmatch(r.URL.Path)
 	if regexResult == nil {
@@ -80,7 +72,9 @@ func viewPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	updateHistory(slug)
-	renderPageTemplate(w, "view", p)
+	templateData = TemplateData{Page: p, History: &history}
+	viewPageTemplate.ExecuteTemplate(w, "base", templateData)
+
 }
 
 func editPageHandler(w http.ResponseWriter, r *http.Request) {
@@ -89,7 +83,8 @@ func editPageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		p = &Page{Slug: slug}
 	}
-	renderPageTemplate(w, "edit", p)
+	templateData = TemplateData{Page: p, History: &history}
+	editPageTemplate.ExecuteTemplate(w, "base", templateData)
 }
 
 func savePageHandler(w http.ResponseWriter, r *http.Request) {

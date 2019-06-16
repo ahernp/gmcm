@@ -23,11 +23,6 @@ func listPages() ([]os.FileInfo, error) {
 	return files, err
 }
 
-func renderSitemapTemplate(w http.ResponseWriter, sitemap *[]os.FileInfo) error {
-	templateData = TemplateData{Sitemap: sitemap, History: &history}
-	return sitemapTemplate.ExecuteTemplate(w, "base", templateData)
-}
-
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	files, err := listPages()
 	if err != nil {
@@ -35,5 +30,6 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sitemap = files
-	renderSitemapTemplate(w, &sitemap)
+	templateData = TemplateData{Sitemap: &sitemap, History: &history}
+	sitemapTemplate.ExecuteTemplate(w, "base", templateData)
 }

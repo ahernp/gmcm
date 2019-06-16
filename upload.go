@@ -31,11 +31,6 @@ func getUploadedFiles() []UploadedFile {
 	return uploadedFiles
 }
 
-func renderUploadTemplate(w http.ResponseWriter) error {
-	templateData = TemplateData{UploadedFiles: &uploadedFiles, History: &history}
-	return uploadTemplate.ExecuteTemplate(w, "base", templateData)
-}
-
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		dir := r.FormValue("dir")
@@ -55,5 +50,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		io.Copy(destFile, sourceFile)
 		uploadedFiles = getUploadedFiles()
 	}
-	renderUploadTemplate(w)
+	templateData = TemplateData{UploadedFiles: &uploadedFiles, History: &history}
+	uploadTemplate.ExecuteTemplate(w, "base", templateData)
 }

@@ -55,13 +55,9 @@ func search(searchTerm string) {
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches, ContentMatches: contentMatches}
 }
 
-func renderSearchTemplate(w http.ResponseWriter, searchTerm string) error {
-	search(searchTerm)
-	templateData = TemplateData{SearchResults: &searchResults, History: &history}
-	return searchTemplate.ExecuteTemplate(w, "base", templateData)
-}
-
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	searchTerm := r.FormValue("search")
-	renderSearchTemplate(w, searchTerm)
+	search(searchTerm)
+	templateData = TemplateData{SearchResults: &searchResults, History: &history}
+	searchTemplate.ExecuteTemplate(w, "base", templateData)
 }
