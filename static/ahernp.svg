@@ -13,7 +13,7 @@
    height="16"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.92.3 (3ce5693, 2018-03-11)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    version="1.0"
    sodipodi:docname="ahernp.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
@@ -36,8 +36,8 @@
      inkscape:current-layer="layer1"
      width="50px"
      height="50px"
-     inkscape:window-width="1533"
-     inkscape:window-height="845"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
      inkscape:window-x="67"
      inkscape:window-y="27"
      showgrid="false"
@@ -50,7 +50,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,7 +61,7 @@
      transform="translate(0,-34)">
     <path
        inkscape:connector-curvature="0"
-       style="fill:#ff0000;fill-opacity:1;stroke:none"
+       style="fill:#5599ff;fill-opacity:1;stroke:none"
        d="m 1.7413107,34.887853 c -0.4728155,0 -0.85345757,0.380642 -0.85345757,0.853457 l 0,1.137944 0,4.551774 0,1.137943 0,5.689717 c 0,0.472816 0.38064207,0.853459 0.85345757,0.853459 l 1.1379435,0 c 0.4728155,0 0.8534574,-0.380643 0.8534574,-0.853459 l 0,-4.836259 2.8448589,0 0,4.836259 c 0,0.472816 0.3806421,0.853459 0.8534575,0.853459 l 1.1379435,0 c 0.4728154,0 0.8534575,-0.380643 0.8534575,-0.853459 l 0,-4.836259 4.83626,0 c 0.472815,0 0.853458,-0.380643 0.853458,-0.853458 l 0,-1.137943 0,-4.551774 0,-1.137944 c 0,-0.472815 -0.380643,-0.853457 -0.853458,-0.853457 l -5.6897175,0 -1.1379435,0 -5.6897173,0 z m 1.9914009,2.844858 2.8448589,0 0,2.844859 -2.8448589,0 0,-2.844859 z m 5.6897174,0 2.844859,0 0,2.844859 -2.844859,0 0,-2.844859 z"
        id="rect2160" />
   </g>

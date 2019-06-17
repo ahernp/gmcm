@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// TemplateData context used to render templates
+// TemplateData context used to render all templates
 type TemplateData struct {
 	Page          *Page
 	History       *[]string
