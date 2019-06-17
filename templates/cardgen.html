@@ -12,13 +12,13 @@
 <h1>Cardgen</h1>
 <form action="/tools/cardgen/" method="post" class="pure-form pure-form-stacked">
     <label for="data">Data:</label>
-    <textarea name="data" rows="5" cols="80">{{printf "%s" .CardgenData.Data}}</textarea>
+    <textarea name="data" rows="5" cols="60">{{printf "%s" .CardgenData.Data}}</textarea>
     <label for="delim">Delimiter used in data:</label>
     <input type="text" name="delim" value={{.CardgenData.Delim}}>
     <label for="template">Template:</label>
-    <textarea name="template" rows="5" cols="80">{{printf "%s" .CardgenData.Template}}</textarea>
+    <textarea name="template" rows="5" cols="60">{{printf "%s" .CardgenData.Template}}</textarea>
     <button type="submit" class="pure-button pure-button-primary">Generate Cards</button>
     <label for="output">Output:</label>
-    <textarea name="output" rows="10" cols="80">{{printf "%s" .CardgenData.Output}}</textarea>
+    <textarea name="output" rows="5" cols="60">{{printf "%s" .CardgenData.Output}}</textarea>
 </form>
 {{end}}

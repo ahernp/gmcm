@@ -9,7 +9,7 @@
 {{define "content"}}
 <form action="/save/{{.Page.Slug}}" method="POST" class="pure-form pure-form-stacked">
     <label for="content">Edit Markdown content</label>
-    <textarea name="content" rows="20" cols="80">{{printf "%s" .Page.Content}}</textarea>
+    <textarea name="content" rows="20" cols="60">{{printf "%s" .Page.Content}}</textarea>
     <button type="submit" class="pure-button pure-button-primary">Save</button>
 </form>
 {{end}}

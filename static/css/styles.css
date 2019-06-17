@@ -3,7 +3,7 @@ html, button, input, select, textarea, .pure-g [class *= "pure-u"] {
 }
 
 body  {
-    font-size: 1.1em;
+    font-size: 1em;
     background-color: #fff;
     color: #000;
     margin: 0;
