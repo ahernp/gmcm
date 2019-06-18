@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+type MatchTemplateData struct {
+	MatchData *MatchData
+	History   *[]string
+}
+
 type MatchData struct {
 	Input   string
 	Keys    string
@@ -58,6 +63,6 @@ func matchHandler(w http.ResponseWriter, r *http.Request) {
 		matchData = match(input, keys, exclude)
 	}
 
-	templateData = TemplateData{MatchData: &matchData, History: &history}
+	templateData := MatchTemplateData{MatchData: &matchData, History: &history}
 	toolsMatchTemplate.ExecuteTemplate(w, "base", templateData)
 }

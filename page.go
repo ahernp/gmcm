@@ -14,6 +14,11 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
+type PageTemplateData struct {
+	Page    *Page
+	History *[]string
+}
+
 // Page containing Markdown text
 type Page struct {
 	Slug    string
@@ -72,7 +77,7 @@ func viewPageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	updateHistory(slug)
-	templateData = TemplateData{Page: p, History: &history}
+	templateData := PageTemplateData{Page: p, History: &history}
 	viewPageTemplate.ExecuteTemplate(w, "base", templateData)
 
 }
@@ -83,7 +88,7 @@ func editPageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		p = &Page{Slug: slug}
 	}
-	templateData = TemplateData{Page: p, History: &history}
+	templateData := PageTemplateData{Page: p, History: &history}
 	editPageTemplate.ExecuteTemplate(w, "base", templateData)
 }
 

@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type DeduplicateTemplateData struct {
+	DeduplicateData *DeduplicateData
+	History         *[]string
+}
+
 type DeduplicateData struct {
 	Input  string
 	Output string
@@ -50,6 +55,6 @@ func deduplicateHandler(w http.ResponseWriter, r *http.Request) {
 		deduplicateData = deduplicate(input)
 	}
 
-	templateData = TemplateData{DeduplicateData: &deduplicateData, History: &history}
+	templateData := DeduplicateTemplateData{DeduplicateData: &deduplicateData, History: &history}
 	toolsDeduplicateTemplate.ExecuteTemplate(w, "base", templateData)
 }

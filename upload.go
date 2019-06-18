@@ -8,6 +8,11 @@ import (
 	"os"
 )
 
+type UploadTemplateData struct {
+	UploadedFiles *[]UploadedFile
+	History       *[]string
+}
+
 // UploadedFile for use in listing uploads
 type UploadedFile struct {
 	Dir  string
@@ -51,6 +56,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		io.Copy(destFile, sourceFile)
 		uploadedFiles = getUploadedFiles()
 	}
-	templateData = TemplateData{UploadedFiles: &uploadedFiles, History: &history}
+	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, History: &history}
 	uploadTemplate.ExecuteTemplate(w, "base", templateData)
 }

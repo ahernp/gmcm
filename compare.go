@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+type CompareTemplateData struct {
+	CompareData *CompareData
+	History     *[]string
+}
+
 type CompareData struct {
 	Input1 string
 	Input2 string
@@ -80,6 +85,6 @@ func compareHandler(w http.ResponseWriter, r *http.Request) {
 		compareData = compare(input1, input2)
 	}
 
-	templateData = TemplateData{CompareData: &compareData, History: &history}
+	templateData := CompareTemplateData{CompareData: &compareData, History: &history}
 	toolsCompareTemplate.ExecuteTemplate(w, "base", templateData)
 }

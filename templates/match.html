@@ -17,8 +17,9 @@
     <textarea name="input" rows="5" cols="60">{{printf "%s" .MatchData.Input}}</textarea>
     <label for="keys">Keys:</label>
     <textarea name="keys" rows="5" cols="60">{{printf "%s" .MatchData.Keys}}</textarea>
-    <label for="exclude">Exclude matches:</label>
-    <input type="checkbox" name="exclude" value="checked" {{if .MatchData.Exclude}}checked{{end}}>
+    <label for="exclude">Exclude matches:
+        <input type="checkbox" name="exclude" value="checked" {{if .MatchData.Exclude}}checked{{end}}>
+    </label>
     <button type="submit" class="pure-button pure-button-primary">Match</button>
     <label for="output">Output:</label>
     <textarea name="output" rows="5" cols="60">{{printf "%s" .MatchData.Output}}</textarea>

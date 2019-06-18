@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+type CardgenTemplateData struct {
+	CardgenData *CardgenData
+	History     *[]string
+}
+
 type CardgenData struct {
 	Data     string
 	Delim    string
@@ -53,7 +58,7 @@ func cardgenHandler(w http.ResponseWriter, r *http.Request) {
 		cardgenData = generateCards(data, delim, template)
 	}
 
-	templateData = TemplateData{CardgenData: &cardgenData, History: &history}
+	templateData := CardgenTemplateData{CardgenData: &cardgenData, History: &history}
 	toolsCardgenTemplate.ExecuteTemplate(w, "base", templateData)
 }
 

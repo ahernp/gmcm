@@ -3,23 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 )
-
-// TemplateData context used to render all templates
-type TemplateData struct {
-	Page            *Page
-	History         *[]string
-	Sitemap         *[]os.FileInfo
-	SearchResults   *SearchResults
-	UploadedFiles   *[]UploadedFile
-	CardgenData     *CardgenData
-	CompareData     *CompareData
-	DeduplicateData *DeduplicateData
-	MatchData       *MatchData
-}
-
-var templateData TemplateData
 
 const port = ":7713"
 

@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+type SearchTemplateData struct {
+	SearchResults *SearchResults
+	History       *[]string
+}
+
 // ContentMatch documents a page content match
 type ContentMatch struct {
 	Slug    string
@@ -58,6 +63,6 @@ func search(searchTerm string) {
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	searchTerm := r.FormValue("search")
 	search(searchTerm)
-	templateData = TemplateData{SearchResults: &searchResults, History: &history}
+	templateData := SearchTemplateData{SearchResults: &searchResults, History: &history}
 	searchTemplate.ExecuteTemplate(w, "base", templateData)
 }

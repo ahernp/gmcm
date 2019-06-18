@@ -8,6 +8,11 @@ import (
 	"os"
 )
 
+type SitemapTemplateData struct {
+	Sitemap *[]os.FileInfo
+	History *[]string
+}
+
 var sitemap, _ = listPages()
 
 var sitemapTemplate = template.Must(
@@ -30,6 +35,6 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sitemap = files
-	templateData = TemplateData{Sitemap: &sitemap, History: &history}
+	templateData := SitemapTemplateData{Sitemap: &sitemap, History: &history}
 	sitemapTemplate.ExecuteTemplate(w, "base", templateData)
 }
