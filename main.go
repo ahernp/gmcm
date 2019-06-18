@@ -14,6 +14,7 @@ type TemplateData struct {
 	SearchResults   *SearchResults
 	UploadedFiles   *[]UploadedFile
 	CardgenData     *CardgenData
+	CompareData     *CompareData
 	DeduplicateData *DeduplicateData
 }
 
@@ -35,6 +36,7 @@ func main() {
 	http.HandleFunc("/sitemap/", sitemapHandler)
 	http.HandleFunc("/tools/", redirectToCardgenHandler)
 	http.HandleFunc("/tools/cardgen/", cardgenHandler)
+	http.HandleFunc("/tools/compare/", compareHandler)
 	http.HandleFunc("/tools/deduplicate/", deduplicateHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 

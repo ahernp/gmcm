@@ -1,0 +1,26 @@
+{{define "title"}}Tools: Compare{{end}}
+
+{{define "mainmenu-extra"}}
+<p><a href="/tools/cardgen">Cardgen</a></p>
+<p>Compare</p>
+<p><a href="/tools/deduplicate">Deduplicate</a></p>
+<p><a href="/tools/match">Match</a></p>
+{{end}}
+
+{{define "searchterm"}}{{end}}
+
+{{define "content"}}
+<h1>Compare two lists</h1>
+<p>Sort and compare inputs.</p>
+<form action="/tools/compare/" method="post" class="pure-form pure-form-stacked">
+    <label for="input1">Input One:</label>
+    <textarea name="input1" rows="5" cols="60">{{printf "%s" .CompareData.Input1}}</textarea>
+    <label for="input2">Input Two:</label>
+    <textarea name="input2" rows="5" cols="60">{{printf "%s" .CompareData.Input2}}</textarea>
+    <button type="submit" class="pure-button pure-button-primary">Compare</button>
+    <label for="output">Output:</label>
+    <textarea name="output" rows="5" cols="60">{{printf "%s" .CompareData.Output}}</textarea>
+</form>
+<p>If a line in First Input is missing from Second Input then it is included in Output with the prefix "D:".</p>
+<p>If a line in Second Input is missing from First Input then it is included in Output with the prefix "I:".</p>
+{{end}}
