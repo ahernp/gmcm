@@ -16,6 +16,7 @@ type TemplateData struct {
 	CardgenData     *CardgenData
 	CompareData     *CompareData
 	DeduplicateData *DeduplicateData
+	MatchData       *MatchData
 }
 
 var templateData TemplateData
@@ -38,6 +39,7 @@ func main() {
 	http.HandleFunc("/tools/cardgen/", cardgenHandler)
 	http.HandleFunc("/tools/compare/", compareHandler)
 	http.HandleFunc("/tools/deduplicate/", deduplicateHandler)
+	http.HandleFunc("/tools/match/", matchHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))
