@@ -8,12 +8,13 @@ import (
 
 // TemplateData context used to render all templates
 type TemplateData struct {
-	Page          *Page
-	History       *[]string
-	Sitemap       *[]os.FileInfo
-	SearchResults *SearchResults
-	UploadedFiles *[]UploadedFile
-	CardgenData   *CardgenData
+	Page            *Page
+	History         *[]string
+	Sitemap         *[]os.FileInfo
+	SearchResults   *SearchResults
+	UploadedFiles   *[]UploadedFile
+	CardgenData     *CardgenData
+	DeduplicateData *DeduplicateData
 }
 
 var templateData TemplateData
@@ -34,6 +35,7 @@ func main() {
 	http.HandleFunc("/sitemap/", sitemapHandler)
 	http.HandleFunc("/tools/", redirectToCardgenHandler)
 	http.HandleFunc("/tools/cardgen/", cardgenHandler)
+	http.HandleFunc("/tools/deduplicate/", deduplicateHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
 	log.Fatal(http.ListenAndServe(port, nil))

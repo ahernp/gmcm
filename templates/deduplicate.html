@@ -1,0 +1,20 @@
+{{define "title"}}Tools: Deduplicate{{end}}
+
+{{define "mainmenu-extra"}}
+<p><a href="/tools/cardgen">Cardgen</a></p>
+<p>Compare</p>
+<p>Match</p>
+{{end}}
+
+{{define "searchterm"}}{{end}}
+
+{{define "content"}}
+<h1>Deduplicate</h1>
+<form action="/tools/deduplicate/" method="post" class="pure-form pure-form-stacked">
+    <label for="input">Input:</label>
+    <textarea name="input" rows="5" cols="60">{{printf "%s" .DeduplicateData.Input}}</textarea>
+    <button type="submit" class="pure-button pure-button-primary">Deduplicate</button>
+    <label for="output">Output:</label>
+    <textarea name="output" rows="5" cols="60">{{printf "%s" .DeduplicateData.Output}}</textarea>
+</form>
+{{end}}
