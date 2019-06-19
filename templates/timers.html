@@ -1,0 +1,29 @@
+{{define "title"}}Timers{{end}}
+
+{{define "mainmenu-extra"}}{{end}}
+
+{{define "searchterm"}}{{end}}
+
+{{define "content"}}
+<h1>Timers</h1>
+{{range .TimersData.Timers}}
+    <p label="{{.Label}}" target="{{.Target}}" class="timer"></p>
+{{end}}
+{{end}}
+
+{{define "scripts-extra"}}
+<script src="/static/js/countdown-2.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var setTimes = function() {
+            $(".timer").each(function(index){
+                var label = $(this).attr("label");
+                var target = $(this).attr("target");
+                $(this).text(label + ': ' + countdown(new Date(target)).toString() + ".");
+            });
+        };
+        setTimes();
+        setInterval(setTimes, 1000);
+    });
+</script>
+{{end}}

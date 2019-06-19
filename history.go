@@ -6,12 +6,12 @@ import (
 )
 
 const historySize = 20
+const historyFilename = "data/history.txt"
 
 var history = readHistory()
 
 func readHistory() []string {
-	filename := "data/history.txt"
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(historyFilename)
 	if err != nil {
 		return nil
 	}
@@ -19,9 +19,8 @@ func readHistory() []string {
 }
 
 func writeHistory() error {
-	filename := "data/history.txt"
 	historyAsString := strings.Join(history, "\n")
-	return ioutil.WriteFile(filename, []byte(historyAsString), 0600)
+	return ioutil.WriteFile(historyFilename, []byte(historyAsString), 0600)
 }
 
 func updateHistory(slug string) {

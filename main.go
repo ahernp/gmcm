@@ -19,6 +19,7 @@ func main() {
 	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
+	http.HandleFunc("/timers/", timersHandler)
 	http.HandleFunc("/tools/", redirectToCardgenHandler)
 	http.HandleFunc("/tools/cardgen/", cardgenHandler)
 	http.HandleFunc("/tools/compare/", compareHandler)
