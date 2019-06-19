@@ -22,7 +22,7 @@ var defaultCardgenData = CardgenData{
 	Data:     "#Name,#URL,#Description\nGoogle,www.google.com,Search engine.\nAmazon,www.amazon.co.uk,Bookshop.",
 	Delim:    ",",
 	Template: "<li>#Name<a href=\"https://#URL\" title=\"#Description\">#URL</a>#Description</li>",
-	Output:   "<li>Google<a href=\"https://www.google.com\" title=\"Search engine.\">www.google.com</a>Search engine.</li>\n<li>Amazon<a href=\"https://www.amazon.co.uk\" title=\"Bookshop.\">www.amazon.co.uk</a>Bookshop.</li>"}
+	Output:   "<li>Google<a href=\"https://www.google.com\" title=\"Search engine.\">www.google.com</a>Search engine.</li>\n<li>Amazon<a href=\"https://www.amazon.co.uk\" title=\"Bookshop.\">www.amazon.co.uk</a>Bookshop.</li>\n"}
 
 var cardgenData CardgenData
 

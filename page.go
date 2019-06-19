@@ -35,6 +35,7 @@ var editPageTemplate = htmlTemplate.Must(
 	htmlTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
 
 func markdownToHTML(args ...interface{}) string {
+	// Todo: write own markdown to html converter
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
 
@@ -44,7 +45,7 @@ func markdownToHTML(args ...interface{}) string {
 
 	s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
 
-	return strings.ReplaceAll(string(s), "&amp;#", "&#")
+	return strings.ReplaceAll(string(s), "&amp;#", "&#") // Unescape ampersands preceeding symbol number
 }
 
 func (p *Page) save() error {

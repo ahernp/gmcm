@@ -19,7 +19,7 @@ type DeduplicateData struct {
 
 var defaultDeduplicateData = DeduplicateData{
 	Input:  "Record3\nRecord4\nRecord4\nRecord1",
-	Output: "Record1\nRecord3\nRecord4"}
+	Output: "Record1\nRecord3\nRecord4\n"}
 
 var deduplicateData DeduplicateData
 

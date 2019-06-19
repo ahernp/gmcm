@@ -22,7 +22,7 @@ var defaultMatchData = MatchData{
 	Input:   "Record3\nRecord4\nRecord4\nRecord1",
 	Keys:    "Record4\nRecord1",
 	Exclude: false,
-	Output:  "Record4\nRecord4\nRecord1"}
+	Output:  "Record4\nRecord4\nRecord1\n"}
 
 var matchData MatchData
 

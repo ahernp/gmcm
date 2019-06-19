@@ -22,7 +22,7 @@ type CompareData struct {
 var defaultCompareData = CompareData{
 	Input1: "Record1\nRecord3\nRecord4",
 	Input2: "Record1\nRecord2\nRecord3",
-	Output: "Results: 2 matches; 1 inserts; 1 deletes.\nI:Record2\nD:Record4"}
+	Output: "Results: 2 matches; 1 inserts; 1 deletes.\nI:Record2\nD:Record4\n"}
 
 var compareData CompareData
 
