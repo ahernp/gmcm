@@ -52,7 +52,8 @@ func search(searchTerm string) {
 			content := s[1]
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug:    strings.ReplaceAll(filePath, pagesPath, ""),
+					Slug: strings.ReplaceAll(filePath, pagesPath, ""),
+					// todo: Insert bold tags in positions before and after found text
 					Content: re.ReplaceAllString(content, "<b>"+searchTerm+"</b>")})
 		}
 	}
