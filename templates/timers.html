@@ -9,12 +9,6 @@
 {{range .TimersData.Timers}}
     <p label="{{.Label}}" target="{{.Target}}" class="timer"></p>
 {{end}}
-<p>
-    Show full page version:
-    {{range .TimersData.Timers}}
-        <a href="/timers/{{.Slug}}/">{{.Label}}</a>
-    {{end}}
-</p>
 {{end}}
 
 {{define "scripts-extra"}}

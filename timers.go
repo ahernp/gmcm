@@ -34,11 +34,6 @@ func readTimers() error {
 	return json.Unmarshal([]byte(content), &timersData)
 }
 
-func writeTimers() error {
-	jsonData, _ := json.MarshalIndent(timersData, "", " ")
-	return ioutil.WriteFile(timersFilename, jsonData, 0600)
-}
-
 func timersHandler(w http.ResponseWriter, r *http.Request) {
 	err := readTimers()
 	if err != nil {
