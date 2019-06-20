@@ -37,7 +37,6 @@ var editPageTemplate = htmlTemplate.Must(
 	htmlTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
 
 func markdownToHTML(args ...interface{}) string {
-	// Todo: write own markdown to html converter
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(extensions)
 

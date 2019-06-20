@@ -58,7 +58,7 @@ func search(searchTerm string) {
 	var nameMatches []string
 	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
 		if caseinsensitiveMatch.MatchString(sitemap[mapPos].Name()) {
-			nameMatches = append(nameMatches, highlightSubString(sitemap[mapPos].Name(), searchTerm))
+			nameMatches = append(nameMatches, sitemap[mapPos].Name())
 		}
 	}
 
