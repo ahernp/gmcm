@@ -8,15 +8,10 @@ import (
 	"strings"
 )
 
+// SearchTemplateData template context
 type SearchTemplateData struct {
 	SearchResults *SearchResults
 	History       *[]string
-}
-
-// ContentMatch documents a page content match
-type ContentMatch struct {
-	Slug    string
-	Content string
 }
 
 // SearchResults contains all the matches found
@@ -24,6 +19,12 @@ type SearchResults struct {
 	SearchTerm     string
 	NameMatches    []string
 	ContentMatches []ContentMatch
+}
+
+// ContentMatch contains a page content match
+type ContentMatch struct {
+	Slug    string
+	Content string
 }
 
 var searchResults SearchResults

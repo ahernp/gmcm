@@ -7,15 +7,18 @@ import (
 	"net/http"
 )
 
+// TimersTemplateData template context
 type TimersTemplateData struct {
 	TimersData *TimersData
 	History    *[]string
 }
 
+// TimersData template data
 type TimersData struct {
 	Timers []TimerData `json:"timers"`
 }
 
+// TimerData attributes of a single timer
 type TimerData struct {
 	Target string `json:"target"`
 	Label  string `json:"label"`

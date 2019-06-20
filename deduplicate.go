@@ -7,11 +7,13 @@ import (
 	"strings"
 )
 
+// DeduplicateTemplateData template context
 type DeduplicateTemplateData struct {
 	DeduplicateData *DeduplicateData
 	History         *[]string
 }
 
+// DeduplicateData deduplicate form fields
 type DeduplicateData struct {
 	Input  string
 	Output string
@@ -50,7 +52,7 @@ func sortAndDeduplicate(input string) DeduplicateData {
 func deduplicateHandler(writer http.ResponseWriter, request *http.Request) {
 	deduplicateData = defaultDeduplicateData
 
-	if request.Method == "POST" {
+	if request.Method == postMethod {
 		input := request.FormValue("input")
 		deduplicateData = sortAndDeduplicate(input)
 	}

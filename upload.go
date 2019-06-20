@@ -8,12 +8,13 @@ import (
 	"os"
 )
 
+// UploadTemplateData template context
 type UploadTemplateData struct {
 	UploadedFiles *[]UploadedFile
 	History       *[]string
 }
 
-// UploadedFile for use in listing uploads
+// UploadedFile template data
 type UploadedFile struct {
 	Dir  string
 	File os.FileInfo
@@ -38,7 +39,7 @@ func getUploadedFiles() []UploadedFile {
 }
 
 func uploadHandler(writer http.ResponseWriter, request *http.Request) {
-	if request.Method == "POST" {
+	if request.Method == postMethod {
 		dir := request.FormValue("dir")
 		request.ParseMultipartForm(10 << 20)
 		sourceFile, handler, err := request.FormFile("newFile")

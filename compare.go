@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
+// CompareTemplateData template context
 type CompareTemplateData struct {
 	CompareData *CompareData
 	History     *[]string
 }
 
+// CompareData form fields
 type CompareData struct {
 	Input1 string
 	Input2 string
@@ -82,7 +84,7 @@ func compare(input1 string, input2 string) CompareData {
 func compareHandler(writer http.ResponseWriter, request *http.Request) {
 	compareData = defaultCompareData
 
-	if request.Method == "POST" {
+	if request.Method == postMethod {
 		input1 := request.FormValue("input1")
 		input2 := request.FormValue("input2")
 		compareData = compare(input1, input2)

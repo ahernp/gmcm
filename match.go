@@ -6,11 +6,13 @@ import (
 	"strings"
 )
 
+// MatchTemplateData template context
 type MatchTemplateData struct {
 	MatchData *MatchData
 	History   *[]string
 }
 
+// MatchData form fields
 type MatchData struct {
 	Input   string
 	Keys    string
@@ -55,7 +57,7 @@ func match(input string, keys string, exclude bool) MatchData {
 func matchHandler(writer http.ResponseWriter, request *http.Request) {
 	matchData = defaultMatchData
 
-	if request.Method == "POST" {
+	if request.Method == postMethod {
 		input := request.FormValue("input")
 		keys := request.FormValue("keys")
 		excludeValue := request.FormValue("exclude")

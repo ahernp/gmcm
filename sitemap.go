@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// SitemapTemplateData template context
 type SitemapTemplateData struct {
 	Sitemap *[]os.FileInfo
 	History *[]string

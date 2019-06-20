@@ -6,17 +6,21 @@ import (
 	"strings"
 )
 
+// CardgenTemplateData template context
 type CardgenTemplateData struct {
 	CardgenData *CardgenData
 	History     *[]string
 }
 
+// CardgenData form fields
 type CardgenData struct {
 	Data     string
 	Delim    string
 	Template string
 	Output   string
 }
+
+const postMethod = "POST"
 
 var defaultCardgenData = CardgenData{
 	Data:     "#Name,#URL,#Description\nGoogle,www.google.com,Search engine.\nAmazon,www.amazon.co.uk,Bookshop.",
@@ -50,7 +54,7 @@ func generateCards(data string, delim string, template string) CardgenData {
 func cardgenHandler(writer http.ResponseWriter, request *http.Request) {
 	cardgenData = defaultCardgenData
 
-	if request.Method == "POST" {
+	if request.Method == postMethod {
 		data := request.FormValue("data")
 		delim := request.FormValue("delim")
 		template := request.FormValue("template")

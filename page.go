@@ -14,7 +14,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
-// Page template including history
+// PageTemplateData template data
 type PageTemplateData struct {
 	Page    *Page
 	History *[]string
