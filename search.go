@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os/exec"
+	"regexp"
 	"strings"
 	"text/template"
 )
@@ -52,10 +53,11 @@ func getFilePathContentFromGrep(grepString string) (string, string) {
 }
 
 func search(searchTerm string) {
+	caseinsensitiveMatch := regexp.MustCompile(`(?i)` + searchTerm)
 
 	var nameMatches []string
 	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
-		if strings.Contains(sitemap[mapPos].Name(), strings.ToLower(searchTerm)) {
+		if caseinsensitiveMatch.MatchString(sitemap[mapPos].Name()) {
 			nameMatches = append(nameMatches, highlightSubString(sitemap[mapPos].Name(), searchTerm))
 		}
 	}
