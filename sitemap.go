@@ -28,13 +28,13 @@ func listPages() ([]os.FileInfo, error) {
 	return files, err
 }
 
-func sitemapHandler(w http.ResponseWriter, r *http.Request) {
+func sitemapHandler(writer http.ResponseWriter, request *http.Request) {
 	files, err := listPages()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	sitemap = files
 	templateData := SitemapTemplateData{Sitemap: &sitemap, History: &history}
-	sitemapTemplate.ExecuteTemplate(w, "base", templateData)
+	sitemapTemplate.ExecuteTemplate(writer, "base", templateData)
 }

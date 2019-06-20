@@ -27,29 +27,29 @@ var uploadTemplate = template.Must(
 
 func getUploadedFiles() []UploadedFile {
 	var uploadedFiles []UploadedFile
-	for i := 0; i < len(uploadDirs); i++ {
-		path := "media/" + uploadDirs[i]
+	for dirPos := 0; dirPos < len(uploadDirs); dirPos++ {
+		path := "media/" + uploadDirs[dirPos]
 		files, _ := ioutil.ReadDir(path)
-		for j := 0; j < len(files); j++ {
-			uploadedFiles = append(uploadedFiles, UploadedFile{Dir: uploadDirs[i], File: files[j]})
+		for filePos := 0; filePos < len(files); filePos++ {
+			uploadedFiles = append(uploadedFiles, UploadedFile{Dir: uploadDirs[dirPos], File: files[filePos]})
 		}
 	}
 	return uploadedFiles
 }
 
-func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		dir := r.FormValue("dir")
-		r.ParseMultipartForm(10 << 20)
-		sourceFile, handler, err := r.FormFile("newFile")
+func uploadHandler(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == "POST" {
+		dir := request.FormValue("dir")
+		request.ParseMultipartForm(10 << 20)
+		sourceFile, handler, err := request.FormFile("newFile")
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer sourceFile.Close()
 		destFile, err := os.OpenFile("media/"+dir+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer destFile.Close()
@@ -57,5 +57,5 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		uploadedFiles = getUploadedFiles()
 	}
 	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, History: &history}
-	uploadTemplate.ExecuteTemplate(w, "base", templateData)
+	uploadTemplate.ExecuteTemplate(writer, "base", templateData)
 }

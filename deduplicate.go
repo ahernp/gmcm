@@ -23,18 +23,18 @@ var defaultDeduplicateData = DeduplicateData{
 
 var deduplicateData DeduplicateData
 
-var toolsDeduplicateTemplate = template.Must(
+var deduplicateTemplate = template.Must(
 	template.ParseFiles("templates/deduplicate.html", "templates/base.html"))
 
-func deduplicate(input string) DeduplicateData {
+func sortAndDeduplicate(input string) DeduplicateData {
 	inputSansCarriageReturns := strings.ReplaceAll(input, "\r", "")
 	inputRecords := strings.Split(inputSansCarriageReturns, "\n")
 	sort.Strings(inputRecords)
 
 	output := ""
-	for i := 0; i < len(inputRecords)-1; i++ {
-		if inputRecords[i] != inputRecords[i+1] {
-			output = output + inputRecords[i] + "\n"
+	for recordPos := 0; recordPos < len(inputRecords)-1; recordPos++ {
+		if inputRecords[recordPos] != inputRecords[recordPos+1] {
+			output = output + inputRecords[recordPos] + "\n"
 		}
 	}
 
@@ -47,14 +47,14 @@ func deduplicate(input string) DeduplicateData {
 	return DeduplicateData{Input: inputSansCarriageReturns, Output: output}
 }
 
-func deduplicateHandler(w http.ResponseWriter, r *http.Request) {
+func deduplicateHandler(writer http.ResponseWriter, request *http.Request) {
 	deduplicateData = defaultDeduplicateData
 
-	if r.Method == "POST" {
-		input := r.FormValue("input")
-		deduplicateData = deduplicate(input)
+	if request.Method == "POST" {
+		input := request.FormValue("input")
+		deduplicateData = sortAndDeduplicate(input)
 	}
 
 	templateData := DeduplicateTemplateData{DeduplicateData: &deduplicateData, History: &history}
-	toolsDeduplicateTemplate.ExecuteTemplate(w, "base", templateData)
+	deduplicateTemplate.ExecuteTemplate(writer, "base", templateData)
 }

@@ -7,10 +7,10 @@ import (
 
 const expectedHTML = "<h1 id=\"toc_0\">Heading</h1>"
 
-func TestMarkdownToHTML(t *testing.T) {
-	md := "# Heading"
-	html := markdownToHTML(md)
+func TestMarkdownToHTML(test *testing.T) {
+	markdown := "# Heading"
+	html := markdownToHTML(markdown)
 	if !strings.Contains(html, expectedHTML) {
-		t.Errorf("Markdown '%s' converted to HTML '%s'.", md, html)
+		test.Errorf("Markdown '%s' converted to HTML '%s'.", markdown, html)
 	}
 }

@@ -26,7 +26,7 @@ var defaultMatchData = MatchData{
 
 var matchData MatchData
 
-var toolsMatchTemplate = template.Must(
+var matchTemplate = template.Must(
 	template.ParseFiles("templates/match.html", "templates/base.html"))
 
 func match(input string, keys string, exclude bool) MatchData {
@@ -36,33 +36,33 @@ func match(input string, keys string, exclude bool) MatchData {
 	keyRecords := strings.Split(keysSansCarriageReturns, "\n")
 
 	output := ""
-	for i := 0; i < len(inputRecords); i++ {
+	for recordPos := 0; recordPos < len(inputRecords); recordPos++ {
 		var matchFound = false
-		for j := 0; j < len(keyRecords); j++ {
-			if strings.Index(inputRecords[i], keyRecords[j]) > -1 {
+		for keyPos := 0; keyPos < len(keyRecords); keyPos++ {
+			if strings.Index(inputRecords[recordPos], keyRecords[keyPos]) > -1 {
 				matchFound = true
 				break
 			}
 		}
 		if (!matchFound && exclude) || (matchFound && !exclude) {
-			output = output + inputRecords[i] + "\n"
+			output = output + inputRecords[recordPos] + "\n"
 		}
 	}
 
 	return MatchData{Input: input, Keys: keys, Exclude: exclude, Output: output}
 }
 
-func matchHandler(w http.ResponseWriter, r *http.Request) {
+func matchHandler(writer http.ResponseWriter, request *http.Request) {
 	matchData = defaultMatchData
 
-	if r.Method == "POST" {
-		input := r.FormValue("input")
-		keys := r.FormValue("keys")
-		excludeValue := r.FormValue("exclude")
+	if request.Method == "POST" {
+		input := request.FormValue("input")
+		keys := request.FormValue("keys")
+		excludeValue := request.FormValue("exclude")
 		exclude := excludeValue == "checked"
 		matchData = match(input, keys, exclude)
 	}
 
 	templateData := MatchTemplateData{MatchData: &matchData, History: &history}
-	toolsMatchTemplate.ExecuteTemplate(w, "base", templateData)
+	matchTemplate.ExecuteTemplate(writer, "base", templateData)
 }

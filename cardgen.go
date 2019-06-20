@@ -26,7 +26,7 @@ var defaultCardgenData = CardgenData{
 
 var cardgenData CardgenData
 
-var toolsCardgenTemplate = template.Must(
+var cardgenTemplate = template.Must(
 	template.ParseFiles("templates/cardgen.html", "templates/base.html"))
 
 func generateCards(data string, delim string, template string) CardgenData {
@@ -36,32 +36,31 @@ func generateCards(data string, delim string, template string) CardgenData {
 	labels := strings.Split(dataRecords[0], delim)
 
 	output := ""
-	for i := 1; i < len(dataRecords); i++ {
+	for recordPos := 1; recordPos < len(dataRecords); recordPos++ {
 		currentCard := templateSansCarriageReturns
-		currentData := strings.Split(dataRecords[i], delim)
-		for j := 0; j < len(currentData); j++ {
-
-			currentCard = strings.ReplaceAll(currentCard, labels[j], currentData[j])
+		currentData := strings.Split(dataRecords[recordPos], delim)
+		for labelPos := 0; labelPos < len(currentData); labelPos++ {
+			currentCard = strings.ReplaceAll(currentCard, labels[labelPos], currentData[labelPos])
 		}
 		output = output + currentCard + "\n"
 	}
 	return CardgenData{Data: data, Delim: delim, Template: template, Output: output}
 }
 
-func cardgenHandler(w http.ResponseWriter, r *http.Request) {
+func cardgenHandler(writer http.ResponseWriter, request *http.Request) {
 	cardgenData = defaultCardgenData
 
-	if r.Method == "POST" {
-		data := r.FormValue("data")
-		delim := r.FormValue("delim")
-		template := r.FormValue("template")
+	if request.Method == "POST" {
+		data := request.FormValue("data")
+		delim := request.FormValue("delim")
+		template := request.FormValue("template")
 		cardgenData = generateCards(data, delim, template)
 	}
 
 	templateData := CardgenTemplateData{CardgenData: &cardgenData, History: &history}
-	toolsCardgenTemplate.ExecuteTemplate(w, "base", templateData)
+	cardgenTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
-func redirectToCardgenHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/tools/cardgen/", http.StatusFound)
+func redirectToCardgenHandler(writer http.ResponseWriter, request *http.Request) {
+	http.Redirect(writer, request, "/tools/cardgen/", http.StatusFound)
 }

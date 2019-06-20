@@ -26,7 +26,7 @@ var defaultCompareData = CompareData{
 
 var compareData CompareData
 
-var toolsCompareTemplate = template.Must(
+var compareTemplate = template.Must(
 	template.ParseFiles("templates/compare.html", "templates/base.html"))
 
 func compare(input1 string, input2 string) CompareData {
@@ -70,21 +70,24 @@ func compare(input1 string, input2 string) CompareData {
 		position2++
 		insertCount++
 	}
-	summary := "Results: " + strconv.Itoa(matchCount) + " matches; " + strconv.Itoa(insertCount) + " inserts; " + strconv.Itoa(deleteCount) + " deletes.\n"
+	summary := "Results: " + strconv.Itoa(matchCount) +
+		" matches; " + strconv.Itoa(insertCount) +
+		" inserts; " + strconv.Itoa(deleteCount) +
+		" deletes.\n"
 	output = summary + resultString
 
 	return CompareData{Input1: input1SansCarriageReturns, Input2: input2SansCarriageReturns, Output: output}
 }
 
-func compareHandler(w http.ResponseWriter, r *http.Request) {
+func compareHandler(writer http.ResponseWriter, request *http.Request) {
 	compareData = defaultCompareData
 
-	if r.Method == "POST" {
-		input1 := r.FormValue("input1")
-		input2 := r.FormValue("input2")
+	if request.Method == "POST" {
+		input1 := request.FormValue("input1")
+		input2 := request.FormValue("input2")
 		compareData = compare(input1, input2)
 	}
 
 	templateData := CompareTemplateData{CompareData: &compareData, History: &history}
-	toolsCompareTemplate.ExecuteTemplate(w, "base", templateData)
+	compareTemplate.ExecuteTemplate(writer, "base", templateData)
 }

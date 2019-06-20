@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-const port = ":7713"
+const listeningPort = ":7713"
 
 func main() {
 	mediaFileServer := http.FileServer(http.Dir("media"))
@@ -27,5 +27,5 @@ func main() {
 	http.HandleFunc("/tools/match/", matchHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(listeningPort, nil))
 }

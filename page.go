@@ -14,6 +14,7 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 )
 
+// Page template including history
 type PageTemplateData struct {
 	Page    *Page
 	History *[]string
@@ -28,6 +29,7 @@ type Page struct {
 const pagesPath = "data/pages/"
 
 var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
+
 var viewPageTemplate = textTemplate.Must(textTemplate.New("").
 	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).
 	ParseFiles("templates/view.html", "templates/base.html"))
@@ -43,14 +45,15 @@ func markdownToHTML(args ...interface{}) string {
 	opts := html.RendererOptions{Flags: htmlFlags}
 	renderer := html.NewRenderer(opts)
 
-	s := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
+	htmlString := markdown.ToHTML([]byte(fmt.Sprintf("%s", args...)), parser, renderer)
 
-	return strings.ReplaceAll(string(s), "&amp;#", "&#") // Unescape ampersands preceeding symbol number
+	// Remove escaping of ampersands preceeding a symbol number
+	return strings.ReplaceAll(string(htmlString), "&amp;#", "&#")
 }
 
-func (p *Page) save() error {
-	filename := pagesPath + p.Slug
-	return ioutil.WriteFile(filename, p.Content, 0600)
+func (page *Page) save() error {
+	filename := pagesPath + page.Slug
+	return ioutil.WriteFile(filename, page.Content, 0600)
 }
 
 func loadPage(slug string) (*Page, error) {
@@ -62,50 +65,50 @@ func loadPage(slug string) (*Page, error) {
 	return &Page{Slug: slug, Content: content}, nil
 }
 
-func getSlug(w http.ResponseWriter, r *http.Request) string {
-	regexResult := validPath.FindStringSubmatch(r.URL.Path)
+func getSlug(request *http.Request) string {
+	regexResult := validPath.FindStringSubmatch(request.URL.Path)
 	if regexResult == nil {
 		return ""
 	}
-	return regexResult[2]
+	return regexResult[2] // Slug is in remainder part of regex result
 }
 
-func viewPageHandler(w http.ResponseWriter, r *http.Request) {
-	slug := getSlug(w, r)
+func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
+	slug := getSlug(request)
 	p, err := loadPage(slug)
 	if err != nil {
-		http.Redirect(w, r, "/edit/"+slug, http.StatusFound)
+		http.Redirect(writer, request, "/edit/"+slug, http.StatusFound)
 		return
 	}
 	updateHistory(slug)
 	templateData := PageTemplateData{Page: p, History: &history}
-	viewPageTemplate.ExecuteTemplate(w, "base", templateData)
+	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
 
 }
 
-func editPageHandler(w http.ResponseWriter, r *http.Request) {
-	slug := getSlug(w, r)
+func editPageHandler(writer http.ResponseWriter, request *http.Request) {
+	slug := getSlug(request)
 	p, err := loadPage(slug)
 	if err != nil {
 		p = &Page{Slug: slug}
 	}
 	templateData := PageTemplateData{Page: p, History: &history}
-	editPageTemplate.ExecuteTemplate(w, "base", templateData)
+	editPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
-func savePageHandler(w http.ResponseWriter, r *http.Request) {
-	slug := getSlug(w, r)
-	content := r.FormValue("content")
+func savePageHandler(writer http.ResponseWriter, request *http.Request) {
+	slug := getSlug(request)
+	content := request.FormValue("content")
 	contentSansCarriageReturns := strings.ReplaceAll(content, "\r", "")
 	p := &Page{Slug: slug, Content: []byte(contentSansCarriageReturns)}
 	err := p.save()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/pages/"+slug, http.StatusFound)
+	http.Redirect(writer, request, "/pages/"+slug, http.StatusFound)
 }
 
-func redirectToHomeHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/pages/home", http.StatusFound)
+func redirectToHomeHandler(writer http.ResponseWriter, request *http.Request) {
+	http.Redirect(writer, request, "/pages/home", http.StatusFound)
 }

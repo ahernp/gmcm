@@ -32,10 +32,9 @@ var searchTemplate = template.Must(
 
 func search(searchTerm string) {
 	var nameMatches []string
-	re := regexp.MustCompile(`(?i)` + searchTerm)
-	for i := 0; i < len(sitemap); i++ {
-		if strings.Contains(sitemap[i].Name(), strings.ToLower(searchTerm)) {
-			nameMatches = append(nameMatches, sitemap[i].Name())
+	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
+		if strings.Contains(sitemap[mapPos].Name(), strings.ToLower(searchTerm)) {
+			nameMatches = append(nameMatches, sitemap[mapPos].Name())
 		}
 	}
 
@@ -45,25 +44,26 @@ func search(searchTerm string) {
 
 	grepResults := strings.Split(string(grepResult[:]), "\n")
 	var contentMatches []ContentMatch
-	for i := 0; i < len(grepResults); i++ {
-		s := strings.SplitAfterN(grepResults[i], ":", 2)
-		if len(s) > 1 {
-			filePath := s[0][0 : len(s[0])-1]
-			content := s[1]
+	caseinsensitiveMatch := regexp.MustCompile(`(?i)` + searchTerm)
+	for grepPos := 0; grepPos < len(grepResults); grepPos++ {
+		splitString := strings.SplitAfterN(grepResults[grepPos], ":", 2)
+		if len(splitString) > 1 {
+			filePath := splitString[0][0 : len(splitString[0])-1]
+			content := splitString[1]
 			contentMatches = append(contentMatches,
 				ContentMatch{
 					Slug: strings.ReplaceAll(filePath, pagesPath, ""),
 					// todo: Insert bold tags in positions before and after found text
-					Content: re.ReplaceAllString(content, "<b>"+searchTerm+"</b>")})
+					Content: caseinsensitiveMatch.ReplaceAllString(content, "<b>"+searchTerm+"</b>")})
 		}
 	}
 
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches, ContentMatches: contentMatches}
 }
 
-func searchHandler(w http.ResponseWriter, r *http.Request) {
-	searchTerm := r.FormValue("search")
+func searchHandler(writer http.ResponseWriter, request *http.Request) {
+	searchTerm := request.FormValue("search")
 	search(searchTerm)
 	templateData := SearchTemplateData{SearchResults: &searchResults, History: &history}
-	searchTemplate.ExecuteTemplate(w, "base", templateData)
+	searchTemplate.ExecuteTemplate(writer, "base", templateData)
 }

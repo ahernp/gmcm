@@ -34,12 +34,12 @@ func readTimers() error {
 	return json.Unmarshal([]byte(content), &timersData)
 }
 
-func timersHandler(w http.ResponseWriter, r *http.Request) {
+func timersHandler(writer http.ResponseWriter, request *http.Request) {
 	err := readTimers()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	templateData := TimersTemplateData{TimersData: &timersData, History: &history}
-	timersTemplate.ExecuteTemplate(w, "base", templateData)
+	timersTemplate.ExecuteTemplate(writer, "base", templateData)
 }

@@ -2,9 +2,11 @@ package main
 
 import "testing"
 
-func TestDeduplicate(t *testing.T) {
-	deduplicateResult := deduplicate(defaultDeduplicateData.Input)
+func TestDeduplicate(test *testing.T) {
+	deduplicateResult := sortAndDeduplicate(defaultDeduplicateData.Input)
 	if deduplicateResult.Output != defaultDeduplicateData.Output {
-		t.Errorf("Compare error.\nGot:\n%s\nExpected:\n%s", deduplicateResult.Output, defaultDeduplicateData.Output)
+		test.Errorf("Compare error.\nGot:\n%s\nExpected:\n%s",
+			deduplicateResult.Output,
+			defaultDeduplicateData.Output)
 	}
 }
