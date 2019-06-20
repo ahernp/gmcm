@@ -1,11 +1,10 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 	"os/exec"
-	"regexp"
 	"strings"
+	"text/template"
 )
 
 // SearchTemplateData template context
@@ -31,11 +30,33 @@ var searchResults SearchResults
 var searchTemplate = template.Must(
 	template.ParseFiles("templates/search.html", "templates/base.html"))
 
+func highlightSubString(mainString string, subString string) string {
+	mainStringLower := strings.ToLower(mainString)
+	subStringLower := strings.ToLower(subString)
+	subStringStart := strings.Index(mainStringLower, subStringLower)
+	if subStringStart > -1 {
+		subStringEnd := subStringStart + len(subString)
+		return mainString[:subStringStart] + "<b>" + mainString[subStringStart:subStringEnd] + "</b>" + mainString[subStringEnd:]
+	}
+	return mainString
+}
+
+func getFilePathContentFromGrep(grepString string) (string, string) {
+	splitString := strings.SplitAfterN(grepString, ":", 2)
+	if len(splitString) > 1 {
+		filePath := splitString[0][0 : len(splitString[0])-1]
+		content := splitString[1]
+		return filePath, content
+	}
+	return "", ""
+}
+
 func search(searchTerm string) {
+
 	var nameMatches []string
 	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
 		if strings.Contains(sitemap[mapPos].Name(), strings.ToLower(searchTerm)) {
-			nameMatches = append(nameMatches, sitemap[mapPos].Name())
+			nameMatches = append(nameMatches, highlightSubString(sitemap[mapPos].Name(), searchTerm))
 		}
 	}
 
@@ -45,17 +66,13 @@ func search(searchTerm string) {
 
 	grepResults := strings.Split(string(grepResult[:]), "\n")
 	var contentMatches []ContentMatch
-	caseinsensitiveMatch := regexp.MustCompile(`(?i)` + searchTerm)
 	for grepPos := 0; grepPos < len(grepResults); grepPos++ {
-		splitString := strings.SplitAfterN(grepResults[grepPos], ":", 2)
-		if len(splitString) > 1 {
-			filePath := splitString[0][0 : len(splitString[0])-1]
-			content := splitString[1]
+		filePath, content := getFilePathContentFromGrep(grepResults[grepPos])
+		if filePath != "" && content != "" {
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug: strings.ReplaceAll(filePath, pagesPath, ""),
-					// todo: Insert bold tags in positions before and after found text
-					Content: caseinsensitiveMatch.ReplaceAllString(content, "<b>"+searchTerm+"</b>")})
+					Slug:    strings.ReplaceAll(filePath, pagesPath, ""),
+					Content: highlightSubString(content, searchTerm)})
 		}
 	}
 
