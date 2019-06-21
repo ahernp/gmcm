@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+var version = "0.5.0"
+
 func main() {
 	var port = flag.String("port", "7713", "Local port to listen on")
 	flag.Parse()
@@ -33,6 +35,6 @@ func serve(port string) {
 	http.HandleFunc("/tools/match/", matchHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
-	fmt.Printf("Listening on :%s\n", port)
+	fmt.Printf("Version %s; Listening on port :%s\n", version, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
