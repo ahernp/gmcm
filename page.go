@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"runtime"
 	"strings"
 	textTemplate "text/template"
 
@@ -74,33 +75,35 @@ func getSlug(request *http.Request) string {
 
 func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
 	slug := getSlug(request)
-	p, err := loadPage(slug)
+	page, err := loadPage(slug)
 	if err != nil {
 		http.Redirect(writer, request, "/edit/"+slug, http.StatusFound)
 		return
 	}
 	updateHistory(slug)
-	templateData := PageTemplateData{Page: p, History: &history}
+	templateData := PageTemplateData{Page: page, History: &history}
 	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
-
 }
 
 func editPageHandler(writer http.ResponseWriter, request *http.Request) {
 	slug := getSlug(request)
-	p, err := loadPage(slug)
+	page, err := loadPage(slug)
 	if err != nil {
-		p = &Page{Slug: slug}
+		page = &Page{Slug: slug}
 	}
-	templateData := PageTemplateData{Page: p, History: &history}
+	templateData := PageTemplateData{Page: page, History: &history}
 	editPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
 func savePageHandler(writer http.ResponseWriter, request *http.Request) {
 	slug := getSlug(request)
 	content := request.FormValue("content")
-	contentSansCarriageReturns := strings.ReplaceAll(content, "\r", "")
-	p := &Page{Slug: slug, Content: []byte(contentSansCarriageReturns)}
-	err := p.save()
+	if runtime.GOOS != "windows" {
+		// Remove carriage returns
+		content = strings.ReplaceAll(content, "\r", "")
+	}
+	page := &Page{Slug: slug, Content: []byte(content)}
+	err := page.save()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
