@@ -14,7 +14,7 @@ type SitemapTemplateData struct {
 	History *[]string
 }
 
-var sitemap, _ = listPages()
+var sitemap, _ = listPages() // Populate at startup to be available for searching
 
 var sitemapTemplate = template.Must(
 	template.ParseFiles("templates/sitemap.html", "templates/base.html"))

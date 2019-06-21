@@ -1,13 +1,19 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 )
 
-const listeningPort = ":7713"
-
 func main() {
+	var port = flag.String("port", "7713", "Local port to listen on")
+	flag.Parse()
+	serve(*port)
+}
+
+func serve(port string) {
 	mediaFileServer := http.FileServer(http.Dir("media"))
 	http.Handle("/media/", http.StripPrefix("/media/", mediaFileServer))
 	staticFileServer := http.FileServer(http.Dir("static"))
@@ -27,5 +33,6 @@ func main() {
 	http.HandleFunc("/tools/match/", matchHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
-	log.Fatal(http.ListenAndServe(listeningPort, nil))
+	fmt.Printf("Listening on :%s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
