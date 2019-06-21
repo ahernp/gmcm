@@ -19,7 +19,7 @@
             $(".timer").each(function(index){
                 var label = $(this).attr("label");
                 var target = $(this).attr("target");
-                $(this).text(label + ': ' + countdown(new Date(target)).toString() + ".");
+                $(this).text(label + ": " + countdown(new Date(target)).toString() + ".");
             });
         };
         setTimes();
