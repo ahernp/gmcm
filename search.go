@@ -45,43 +45,45 @@ func updatePageCache(page *Page) {
 	pageCache[page.Slug] = string(page.Content)
 }
 
-func highlightSubString(mainString string, subString string) string {
-	mainStringLower := strings.ToLower(mainString)
-	subStringLower := strings.ToLower(subString)
-	subStringStartPos := strings.Index(mainStringLower, subStringLower)
-	if subStringStartPos > -1 {
-		subStringEndPos := subStringStartPos + len(subString)
-		lineStartPos := strings.LastIndex(mainString[:subStringStartPos], "\n") + 1
-		lineEndPos := strings.Index(mainString[subStringEndPos:], "\n")
-		if lineEndPos == -1 {
-			lineEndPos = len(mainString)
-		} else {
-			lineEndPos = lineEndPos + subStringEndPos
-		}
-		return mainString[lineStartPos:subStringStartPos] + "<b>" + mainString[subStringStartPos:subStringEndPos] + "</b>" + mainString[subStringEndPos:lineEndPos]
+func highlightSubString(mainString string, matches [][]int) string {
+	subStringStartPos := matches[0][0]
+	subStringEndPos := matches[0][1]
+	lineStartPos := strings.LastIndex(mainString[:subStringStartPos], "\n") + 1
+	lineEndPos := strings.Index(mainString[subStringEndPos:], "\n")
+	if lineEndPos == -1 {
+		lineEndPos = len(mainString)
+	} else {
+		lineEndPos = lineEndPos + subStringEndPos
 	}
+	return mainString[lineStartPos:subStringStartPos] + "<b>" + mainString[subStringStartPos:subStringEndPos] + "</b>" + mainString[subStringEndPos:lineEndPos]
 	return mainString
 }
 
 func search(searchTerm string) {
-	caseinsensitiveMatch := regexp.MustCompile(`(?i)` + searchTerm)
-
 	var nameMatches []string
+	var contentMatches []ContentMatch
+	caseinsensitiveMatch, err := regexp.Compile(`(?i)` + searchTerm)
+	if err != nil {
+		searchResults = SearchResults{
+			SearchTerm:     searchTerm,
+			NameMatches:    nameMatches,
+			ContentMatches: contentMatches}
+		return
+	}
+
 	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
 		if caseinsensitiveMatch.MatchString(sitemap[mapPos].Name()) {
 			nameMatches = append(nameMatches, sitemap[mapPos].Name())
 		}
 	}
 
-	var contentMatches []ContentMatch
 	for slug, content := range pageCache {
-		matches := caseinsensitiveMatch.FindAllString(content, -1)
-
+		matches := caseinsensitiveMatch.FindAllStringIndex(content, -1)
 		if len(matches) > 0 {
 			contentMatches = append(contentMatches,
 				ContentMatch{
 					Slug:            slug,
-					Content:         highlightSubString(content, searchTerm),
+					Content:         highlightSubString(content, matches),
 					NumberOfMatches: len(matches)})
 		}
 	}

@@ -1,13 +1,16 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 const mainString = `In a hole in the ground there lived a hobbit
 Not a nasty damp smelly hole filled with the ends of worms and things
 nor a dry sandy hole with nothing in it to sit down on or eat
 it was a hobbit-hole and that means comfort.`
 
-var substrings = []string{"worms", "hobbit", "in", "Comfort.", "not"}
+var subStrings = []string{"worms", "hobbit", "in", "Comfort.", "not"}
+var allMatches = [][]int{{98, 103}, {38, 44}, {0, 2}, {213, 221}, {45, 48}}
 
 var expectedStrings = []string{
 	"Not a nasty damp smelly hole filled with the ends of <b>worms</b> and things",
@@ -17,20 +20,20 @@ var expectedStrings = []string{
 	"<b>Not</b> a nasty damp smelly hole filled with the ends of worms and things"}
 
 func TestHighlightSubString(test *testing.T) {
-	for testPos := 0; testPos < len(substrings); testPos++ {
-		substring := substrings[testPos]
-		expected := expectedStrings[testPos]
-		test.Run(substring, testHighlightSubStringFunc(mainString, substring, expected))
+	for testPos := 0; testPos < len(allMatches); testPos++ {
+		matches := [][]int{allMatches[testPos]}
+		test.Run(subStrings[testPos], testHighlightSubStringFunc(
+			mainString, matches, expectedStrings[testPos]))
 	}
 }
 
-func testHighlightSubStringFunc(mainString string, subString string, expected string) func(*testing.T) {
+func testHighlightSubStringFunc(mainString string, matches [][]int, expected string) func(*testing.T) {
 	return func(test *testing.T) {
-		actual := highlightSubString(mainString, subString)
+		actual := highlightSubString(mainString, matches)
 		if actual != expected {
 			test.Errorf("Expected highlightSubString to return:\n%+v\nWhen highlighting: '%+v'\nBut got:\n%+v",
 				expected,
-				subString,
+				matches,
 				actual)
 		}
 	}
