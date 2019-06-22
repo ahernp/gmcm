@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"sort"
 )
 
 // TimersTemplateData template context
@@ -34,7 +35,13 @@ var timersTemplate = template.Must(
 
 func readTimers() error {
 	content, _ := ioutil.ReadFile(timersFilename)
-	return json.Unmarshal([]byte(content), &timersData)
+	err := json.Unmarshal([]byte(content), &timersData)
+	if err == nil {
+		sort.Slice(timersData.Timers, func(i, j int) bool {
+			return timersData.Timers[i].Target < timersData.Timers[j].Target
+		})
+	}
+	return err
 }
 
 func timersHandler(writer http.ResponseWriter, request *http.Request) {
