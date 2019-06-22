@@ -53,7 +53,7 @@ func markdownToHTML(args ...interface{}) string {
 
 func (page *Page) save() error {
 	filename := pagesPath + page.Slug
-	return ioutil.WriteFile(filename, page.Content, 0600)
+	return ioutil.WriteFile(filename, page.Content, 0644)
 }
 
 func loadPage(slug string) (*Page, error) {
