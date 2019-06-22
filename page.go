@@ -81,6 +81,7 @@ func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	updateHistory(slug)
+	updatePageCache(page)
 	templateData := PageTemplateData{Page: page, History: &history}
 	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
@@ -108,6 +109,7 @@ func savePageHandler(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	updatePageCache(page)
 	http.Redirect(writer, request, "/pages/"+slug, http.StatusFound)
 }
 

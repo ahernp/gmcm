@@ -7,9 +7,11 @@ import (
 	"net/http"
 )
 
-var version = "0.6.0"
+var version = "0.7.0"
 
 func main() {
+	go cacheAllPages()
+
 	var port = flag.String("port", "7713", "Local port to listen on")
 	flag.Parse()
 	serve(*port)

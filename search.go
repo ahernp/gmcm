@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"os/exec"
 	"regexp"
 	"strings"
 	"text/template"
@@ -31,25 +30,35 @@ var searchResults SearchResults
 var searchTemplate = template.Must(
 	template.ParseFiles("templates/search.html", "templates/base.html"))
 
+var pageCache = map[string]string{}
+
+func cacheAllPages() {
+	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
+		page, _ := loadPage(sitemap[mapPos].Name())
+		pageCache[page.Slug] = string(page.Content)
+	}
+}
+
+func updatePageCache(page *Page) {
+	pageCache[page.Slug] = string(page.Content)
+}
+
 func highlightSubString(mainString string, subString string) string {
 	mainStringLower := strings.ToLower(mainString)
 	subStringLower := strings.ToLower(subString)
-	subStringStart := strings.Index(mainStringLower, subStringLower)
-	if subStringStart > -1 {
-		subStringEnd := subStringStart + len(subString)
-		return mainString[:subStringStart] + "<b>" + mainString[subStringStart:subStringEnd] + "</b>" + mainString[subStringEnd:]
+	subStringStartPos := strings.Index(mainStringLower, subStringLower)
+	if subStringStartPos > -1 {
+		subStringEndPos := subStringStartPos + len(subString)
+		lineStartPos := strings.LastIndex(mainString[:subStringStartPos], "\n") + 1
+		lineEndPos := strings.Index(mainString[subStringEndPos:], "\n")
+		if lineEndPos == -1 {
+			lineEndPos = len(mainString)
+		} else {
+			lineEndPos = lineEndPos + subStringEndPos
+		}
+		return mainString[lineStartPos:subStringStartPos] + "<b>" + mainString[subStringStartPos:subStringEndPos] + "</b>" + mainString[subStringEndPos:lineEndPos]
 	}
 	return mainString
-}
-
-func getFilePathContentFromGrep(grepString string) (string, string) {
-	splitString := strings.SplitAfterN(grepString, ":", 2)
-	if len(splitString) > 1 {
-		filePath := splitString[0][0 : len(splitString[0])-1]
-		content := splitString[1]
-		return filePath, content
-	}
-	return "", ""
 }
 
 func search(searchTerm string) {
@@ -62,18 +71,12 @@ func search(searchTerm string) {
 		}
 	}
 
-	grepString := "grep -i " + searchTerm + " " + pagesPath + "*"
-	grepCmd := exec.Command("/bin/sh", "-c", grepString)
-	grepResult, _ := grepCmd.Output()
-
-	grepResults := strings.Split(string(grepResult[:]), "\n")
 	var contentMatches []ContentMatch
-	for grepPos := 0; grepPos < len(grepResults); grepPos++ {
-		filePath, content := getFilePathContentFromGrep(grepResults[grepPos])
-		if filePath != "" && content != "" {
+	for slug, content := range pageCache {
+		if caseinsensitiveMatch.MatchString(content) {
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug:    strings.ReplaceAll(filePath, pagesPath, ""),
+					Slug:    slug,
 					Content: highlightSubString(content, searchTerm)})
 		}
 	}
