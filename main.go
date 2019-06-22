@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-var version = "0.5.0"
+var version = "0.6.0"
 
 func main() {
 	var port = flag.String("port", "7713", "Local port to listen on")
@@ -27,7 +27,6 @@ func serve(port string) {
 	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
-	http.HandleFunc("/timers/", timersHandler)
 	http.HandleFunc("/tools/", redirectToCardgenHandler)
 	http.HandleFunc("/tools/cardgen/", cardgenHandler)
 	http.HandleFunc("/tools/compare/", compareHandler)
