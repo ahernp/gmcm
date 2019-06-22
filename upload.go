@@ -20,6 +20,8 @@ type UploadedFile struct {
 	File os.FileInfo
 }
 
+const postMethod = "POST"
+
 var uploadDirs = [...]string{"img", "code", "doc", "thumb"}
 var uploadedFiles = getUploadedFiles()
 

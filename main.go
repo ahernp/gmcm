@@ -29,11 +29,6 @@ func serve(port string) {
 	http.HandleFunc("/save/", savePageHandler)
 	http.HandleFunc("/search/", searchHandler)
 	http.HandleFunc("/sitemap/", sitemapHandler)
-	http.HandleFunc("/tools/", redirectToCardgenHandler)
-	http.HandleFunc("/tools/cardgen/", cardgenHandler)
-	http.HandleFunc("/tools/compare/", compareHandler)
-	http.HandleFunc("/tools/deduplicate/", deduplicateHandler)
-	http.HandleFunc("/tools/match/", matchHandler)
 	http.HandleFunc("/uploads/", uploadHandler)
 
 	fmt.Printf("Version %s; Listening on port :%s\n", version, port)
