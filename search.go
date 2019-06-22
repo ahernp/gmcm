@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"regexp"
+	"sort"
 	"strings"
 	"text/template"
 )
@@ -22,8 +23,9 @@ type SearchResults struct {
 
 // ContentMatch contains a page content match
 type ContentMatch struct {
-	Slug    string
-	Content string
+	Slug            string
+	Content         string
+	NumberOfMatches int
 }
 
 var searchResults SearchResults
@@ -73,13 +75,23 @@ func search(searchTerm string) {
 
 	var contentMatches []ContentMatch
 	for slug, content := range pageCache {
-		if caseinsensitiveMatch.MatchString(content) {
+		matches := caseinsensitiveMatch.FindAllString(content, -1)
+
+		if len(matches) > 0 {
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug:    slug,
-					Content: highlightSubString(content, searchTerm)})
+					Slug:            slug,
+					Content:         highlightSubString(content, searchTerm),
+					NumberOfMatches: len(matches)})
 		}
 	}
+
+	sort.Slice(contentMatches, func(i, j int) bool {
+		if contentMatches[i].NumberOfMatches == contentMatches[j].NumberOfMatches {
+			return contentMatches[i].Slug < contentMatches[j].Slug
+		}
+		return contentMatches[i].NumberOfMatches > contentMatches[j].NumberOfMatches
+	})
 
 	searchResults = SearchResults{SearchTerm: searchTerm, NameMatches: nameMatches, ContentMatches: contentMatches}
 }

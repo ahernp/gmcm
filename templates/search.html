@@ -23,7 +23,8 @@
                 <ul>
                     {{range .SearchResults.ContentMatches}}
                         <li>
-                            <a href="/pages/{{.Slug}}">{{.Slug}}</a>:<br>
+                            <a href="/pages/{{.Slug}}">{{.Slug}}</a>
+                            ({{.NumberOfMatches}} match{{if ne .NumberOfMatches 1}}es{{end}}):<br>
                             {{.Content}}
                         </li>
                     {{end}}

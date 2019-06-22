@@ -2,11 +2,15 @@ package main
 
 import "testing"
 
-const mainString = "In a hole in the ground there lived a hobbit\nNot a nasty damp smelly hole filled with the ends of worms and things\nnor a dry sandy hole with nothing in it to sit down on or eat\nit was a hobbit-hole and that means comfort."
+const mainString = `In a hole in the ground there lived a hobbit
+Not a nasty damp smelly hole filled with the ends of worms and things
+nor a dry sandy hole with nothing in it to sit down on or eat
+it was a hobbit-hole and that means comfort.`
 
 var substrings = []string{"worms", "hobbit", "in", "Comfort.", "not"}
 
-var expectedStrings = []string{"Not a nasty damp smelly hole filled with the ends of <b>worms</b> and things",
+var expectedStrings = []string{
+	"Not a nasty damp smelly hole filled with the ends of <b>worms</b> and things",
 	"In a hole in the ground there lived a <b>hobbit</b>",
 	"<b>In</b> a hole in the ground there lived a hobbit",
 	"it was a hobbit-hole and that means <b>comfort.</b>",
