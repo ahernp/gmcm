@@ -10,7 +10,7 @@
     {{if or .SearchResults.NameMatches .SearchResults.ContentMatches}}
         <ul>
             {{if .SearchResults.NameMatches}}
-            <li>Slugs ({{len .SearchResults.NameMatches}} found):
+            <li>Names ({{len .SearchResults.NameMatches}} found):
                 <ul>
                     {{range .SearchResults.NameMatches}}
                         <li><a href="/pages/{{.}}">{{.}}</a></li>
@@ -23,7 +23,7 @@
                 <ul>
                     {{range .SearchResults.ContentMatches}}
                         <li>
-                            <a href="/pages/{{.Slug}}">{{.Slug}}</a>
+                            <a href="/pages/{{.Name}}">{{.Name}}</a>
                             ({{.NumberOfMatches}} match{{if ne .NumberOfMatches 1}}es{{end}}):<br>
                             {{.Content}}
                         </li>

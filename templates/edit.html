@@ -1,14 +1,14 @@
-{{define "title"}}Editing {{.Page.Slug}}{{end}}
+{{define "title"}}Editing {{.Page.Name}}{{end}}
 
 {{define "mainmenu-extra"}}
-<p><a href="/pages/{{.Page.Slug}}">View</a></p>
+<p><a href="/pages/{{.Page.Name}}">View</a></p>
 <p><a href="/pages/markdown">Markdown</a></p>
 {{end}}
 
 {{define "searchterm"}}{{end}}
 
 {{define "content"}}
-<form action="/save/{{.Page.Slug}}" method="POST" class="pure-form pure-form-stacked">
+<form action="/save/{{.Page.Name}}" method="POST" class="pure-form pure-form-stacked">
     <label for="content">Edit Markdown content</label>
     <textarea name="content" rows="20" cols="60">{{printf "%s" .Page.Content}}</textarea>
     <button type="submit" class="pure-button pure-button-primary">Save</button>

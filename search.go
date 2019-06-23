@@ -23,7 +23,7 @@ type SearchResults struct {
 
 // ContentMatch contains a page content match
 type ContentMatch struct {
-	Slug            string
+	Name            string
 	Content         string
 	NumberOfMatches int
 }
@@ -37,12 +37,12 @@ var pageCache = map[string]string{}
 func cacheAllPages() {
 	for mapPos := 0; mapPos < len(sitemap); mapPos++ {
 		page, _ := loadPage(sitemap[mapPos].Name())
-		pageCache[page.Slug] = string(page.Content)
+		pageCache[page.Name] = string(page.Content)
 	}
 }
 
 func updatePageCache(page *Page) {
-	pageCache[page.Slug] = string(page.Content)
+	pageCache[page.Name] = string(page.Content)
 }
 
 func highlightSubString(mainString string, matches [][]int) string {
@@ -56,7 +56,6 @@ func highlightSubString(mainString string, matches [][]int) string {
 		lineEndPos = lineEndPos + subStringEndPos
 	}
 	return mainString[lineStartPos:subStringStartPos] + "<b>" + mainString[subStringStartPos:subStringEndPos] + "</b>" + mainString[subStringEndPos:lineEndPos]
-	return mainString
 }
 
 func search(searchTerm string) {
@@ -77,12 +76,12 @@ func search(searchTerm string) {
 		}
 	}
 
-	for slug, content := range pageCache {
+	for name, content := range pageCache {
 		matches := caseinsensitiveMatch.FindAllStringIndex(content, -1)
 		if len(matches) > 0 {
 			contentMatches = append(contentMatches,
 				ContentMatch{
-					Slug:            slug,
+					Name:            name,
 					Content:         highlightSubString(content, matches),
 					NumberOfMatches: len(matches)})
 		}
@@ -90,7 +89,7 @@ func search(searchTerm string) {
 
 	sort.Slice(contentMatches, func(i, j int) bool {
 		if contentMatches[i].NumberOfMatches == contentMatches[j].NumberOfMatches {
-			return contentMatches[i].Slug < contentMatches[j].Slug
+			return contentMatches[i].Name < contentMatches[j].Name
 		}
 		return contentMatches[i].NumberOfMatches > contentMatches[j].NumberOfMatches
 	})

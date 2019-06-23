@@ -23,10 +23,10 @@ func writeHistory() error {
 	return ioutil.WriteFile(historyFilename, []byte(historyAsString), 0600)
 }
 
-func updateHistory(slug string) {
-	newHistory := []string{slug}
+func updateHistory(name string) {
+	newHistory := []string{name}
 	for recordPos := 0; recordPos < len(history); recordPos++ {
-		if history[recordPos] != slug {
+		if history[recordPos] != name {
 			newHistory = append(newHistory, history[recordPos])
 		}
 	}

@@ -23,13 +23,13 @@ type PageTemplateData struct {
 
 // Page containing Markdown text
 type Page struct {
-	Slug    string
+	Name    string
 	Content []byte
 }
 
 const pagesPath = "data/pages/"
 
-var validPath = regexp.MustCompile("^/(edit|save|pages)/([-a-zA-Z0-9]+)$")
+var validPath = regexp.MustCompile("^/(edit|save|pages)/(.+)$")
 
 var viewPageTemplate = textTemplate.Must(textTemplate.New("").
 	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).
@@ -52,67 +52,67 @@ func markdownToHTML(args ...interface{}) string {
 }
 
 func (page *Page) save() error {
-	filename := pagesPath + page.Slug
+	filename := pagesPath + page.Name
 	return ioutil.WriteFile(filename, page.Content, 0644)
 }
 
-func loadPage(slug string) (*Page, error) {
-	filename := pagesPath + slug
+func loadPage(name string) (*Page, error) {
+	filename := pagesPath + name
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	return &Page{Slug: slug, Content: content}, nil
+	return &Page{Name: name, Content: content}, nil
 }
 
-func getSlug(request *http.Request) string {
+func getName(request *http.Request) string {
 	regexResult := validPath.FindStringSubmatch(request.URL.Path)
 	if regexResult == nil {
 		return ""
 	}
-	return regexResult[2] // Slug is in remainder part of regex result
+	return regexResult[2] // Name is in remainder part of regex result
 }
 
 func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
-	slug := getSlug(request)
-	page, err := loadPage(slug)
+	name := getName(request)
+	page, err := loadPage(name)
 	if err != nil {
-		http.Redirect(writer, request, "/edit/"+slug, http.StatusFound)
+		http.Redirect(writer, request, "/edit/"+name, http.StatusFound)
 		return
 	}
-	updateHistory(slug)
+	updateHistory(name)
 	updatePageCache(page)
 	templateData := PageTemplateData{Page: page, History: &history}
 	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
 func editPageHandler(writer http.ResponseWriter, request *http.Request) {
-	slug := getSlug(request)
-	page, err := loadPage(slug)
+	name := getName(request)
+	page, err := loadPage(name)
 	if err != nil {
-		page = &Page{Slug: slug}
+		page = &Page{Name: name}
 	}
 	templateData := PageTemplateData{Page: page, History: &history}
 	editPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
 func savePageHandler(writer http.ResponseWriter, request *http.Request) {
-	slug := getSlug(request)
+	name := getName(request)
 	content := request.FormValue("content")
 	if runtime.GOOS != "windows" {
 		// Remove carriage returns
 		content = strings.ReplaceAll(content, "\r", "")
 	}
-	page := &Page{Slug: slug, Content: []byte(content)}
+	page := &Page{Name: name, Content: []byte(content)}
 	err := page.save()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	updatePageCache(page)
-	http.Redirect(writer, request, "/pages/"+slug, http.StatusFound)
+	http.Redirect(writer, request, "/pages/"+name, http.StatusFound)
 }
 
 func redirectToHomeHandler(writer http.ResponseWriter, request *http.Request) {
-	http.Redirect(writer, request, "/pages/home", http.StatusFound)
+	http.Redirect(writer, request, "/pages/Home", http.StatusFound)
 }
