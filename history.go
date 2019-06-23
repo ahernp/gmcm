@@ -30,6 +30,10 @@ func updateHistory(name string) {
 			newHistory = append(newHistory, history[recordPos])
 		}
 	}
-	history = newHistory[:historySize]
+	if len(newHistory) > historySize {
+		history = newHistory[:historySize]
+	} else {
+		history = newHistory
+	}
 	writeHistory()
 }
