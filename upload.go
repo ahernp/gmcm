@@ -1,18 +1,17 @@
 package main
 
 import (
-	"html/template"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 // UploadTemplateData template context
 type UploadTemplateData struct {
 	UploadedFiles *[]UploadedFile
-	MainMenu      *string
-	History       *[]string
+	GlobalContext *GlobalContext
 }
 
 // UploadedFile template data
@@ -60,6 +59,6 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 		io.Copy(destFile, sourceFile)
 		uploadedFiles = getUploadedFiles()
 	}
-	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, MainMenu: &mainMenu, History: &history}
+	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, GlobalContext: &globalContext}
 	uploadTemplate.ExecuteTemplate(writer, "base", templateData)
 }

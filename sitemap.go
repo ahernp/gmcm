@@ -2,17 +2,16 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 // SitemapTemplateData template context
 type SitemapTemplateData struct {
-	Sitemap  *[]os.FileInfo
-	MainMenu *string
-	History  *[]string
+	Sitemap       *[]os.FileInfo
+	GlobalContext *GlobalContext
 }
 
 var sitemap, _ = listPages() // Populate at startup to be available for searching
@@ -37,6 +36,6 @@ func sitemapHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	sitemap = files
-	templateData := SitemapTemplateData{Sitemap: &sitemap, MainMenu: &mainMenu, History: &history}
+	templateData := SitemapTemplateData{Sitemap: &sitemap, GlobalContext: &globalContext}
 	sitemapTemplate.ExecuteTemplate(writer, "base", templateData)
 }

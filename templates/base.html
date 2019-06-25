@@ -11,12 +11,13 @@
     </head>
     <body>
         <div id="mainmenu">
-            {{.MainMenu}}
+            {{.GlobalContext.MainMenu}}
             <hr>
             <p><a href="/sitemap">Sitemap</a></p>
             <p><a href="/uploads">Uploads</a></p>
-            <hr>
             {{template "mainmenu-extra" .}}
+            <hr>
+            <p>Version {{.GlobalContext.Version}}</p>
         </div>
         <div id="sidebar">
             <form action="/search" method="GET">
@@ -29,7 +30,7 @@
                     autofocus>
             </form>
             <h3 title="Most recently visited pages">History</h3>
-            {{range .History}}
+            {{range .GlobalContext.History}}
                 <p><a href="/pages/{{.}}">{{.}}</a></p>
             {{end}}
         </div>

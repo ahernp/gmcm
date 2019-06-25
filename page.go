@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
-	textTemplate "text/template"
+	"text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -16,9 +16,8 @@ import (
 
 // PageTemplateData template data
 type PageTemplateData struct {
-	Page     *Page
-	MainMenu *string
-	History  *[]string
+	Page          *Page
+	GlobalContext *GlobalContext
 }
 
 // Page containing Markdown text
@@ -36,11 +35,11 @@ var validPath = regexp.MustCompile("^/(edit|save|pages)/(.+)$")
 
 var mainMenu = getMainMenu()
 
-var viewPageTemplate = textTemplate.Must(textTemplate.New("").
-	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).
+var viewPageTemplate = template.Must(template.New("").
+	Funcs(template.FuncMap{"markdownToHTML": markdownToHTML}).
 	ParseFiles("templates/view.html", "templates/base.html"))
-var editPageTemplate = textTemplate.Must(
-	textTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
+var editPageTemplate = template.Must(
+	template.ParseFiles("templates/edit.html", "templates/base.html"))
 
 func getMainMenu() string {
 	content, err := ioutil.ReadFile(pagesPath + mainMenuName)
@@ -95,7 +94,7 @@ func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 	updateHistory(name)
 	updatePageCache(page)
-	templateData := PageTemplateData{Page: page, MainMenu: &mainMenu, History: &history}
+	templateData := PageTemplateData{Page: page, GlobalContext: &globalContext}
 	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
@@ -105,7 +104,7 @@ func editPageHandler(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		page = &Page{Name: name}
 	}
-	templateData := PageTemplateData{Page: page, MainMenu: &mainMenu, History: &history}
+	templateData := PageTemplateData{Page: page, GlobalContext: &globalContext}
 	editPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 

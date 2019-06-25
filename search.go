@@ -11,8 +11,7 @@ import (
 // SearchTemplateData template context
 type SearchTemplateData struct {
 	SearchResults *SearchResults
-	MainMenu      *string
-	History       *[]string
+	GlobalContext *GlobalContext
 }
 
 // SearchResults contains all the matches found
@@ -101,6 +100,6 @@ func search(searchTerm string) {
 func searchHandler(writer http.ResponseWriter, request *http.Request) {
 	searchTerm := request.FormValue("search")
 	search(searchTerm)
-	templateData := SearchTemplateData{SearchResults: &searchResults, MainMenu: &mainMenu, History: &history}
+	templateData := SearchTemplateData{SearchResults: &searchResults, GlobalContext: &globalContext}
 	searchTemplate.ExecuteTemplate(writer, "base", templateData)
 }
