@@ -32,5 +32,6 @@ func serve(port string) {
 	http.HandleFunc("/uploads/", uploadHandler)
 
 	fmt.Printf("Version %s; Listening on port :%s\n", version, port)
+	fmt.Printf("Open http://localhost:%s to use\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
