@@ -18,11 +18,6 @@ type GlobalContext struct {
 
 var globalContext = GlobalContext{MainMenu: &mainMenu, History: &history, Version: &version}
 
-func init() {
-	mainMenu = getMainMenu()
-	history = readHistory()
-}
-
 func main() {
 	go cacheAllPages()
 	var port = flag.String("port", "7713", "Local port to listen on")

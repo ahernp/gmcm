@@ -29,7 +29,7 @@ type Page struct {
 const pagesPath = "data/pages/"
 const mainMenuName = "main-menu"
 
-var defaultMainMenu = []byte("[Home](pages/Home)\n\n[Task List](pages/Task List)\n")
+var defaultMainMenu = []byte("[Home](/pages/Home)\n\n[Task List](/pages/Task List)\n")
 
 var validPath = regexp.MustCompile("^/(edit|save|pages)/(.+)$")
 
@@ -69,8 +69,7 @@ func (page *Page) save() error {
 }
 
 func loadPage(name string) (*Page, error) {
-	filename := pagesPath + name
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(pagesPath + name)
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,7 @@ func readHistory() []string {
 
 func writeHistory() error {
 	historyAsString := strings.Join(history, "\n")
-	return ioutil.WriteFile(historyFilename, []byte(historyAsString), 0600)
+	return ioutil.WriteFile(historyFilename, []byte(historyAsString), 0644)
 }
 
 func updateHistory(name string) {
