@@ -20,12 +20,12 @@ h1 {
 }
 
 a {
-    color: #38c;
+    color: #06d;
 }
 
 a:hover {
     color: #fff;
-    background: #38c;
+    background: #06d;
 }
 
 a[href^="/"] {
