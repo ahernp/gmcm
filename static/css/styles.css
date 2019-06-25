@@ -117,3 +117,7 @@ th, td {
 nav {
     display: none;
 }
+
+textarea {
+    width: 100%;
+}
