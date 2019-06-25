@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	htmlTemplate "html/template"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -17,8 +16,9 @@ import (
 
 // PageTemplateData template data
 type PageTemplateData struct {
-	Page    *Page
-	History *[]string
+	Page     *Page
+	MainMenu *string
+	History  *[]string
 }
 
 // Page containing Markdown text
@@ -28,14 +28,27 @@ type Page struct {
 }
 
 const pagesPath = "data/pages/"
+const mainMenuName = "main-menu"
+
+var defaultMainMenu = []byte("[Home](pages/Home)\n\n[Task List](pages/Task List)\n")
 
 var validPath = regexp.MustCompile("^/(edit|save|pages)/(.+)$")
+
+var mainMenu = getMainMenu()
 
 var viewPageTemplate = textTemplate.Must(textTemplate.New("").
 	Funcs(textTemplate.FuncMap{"markdownToHTML": markdownToHTML}).
 	ParseFiles("templates/view.html", "templates/base.html"))
-var editPageTemplate = htmlTemplate.Must(
-	htmlTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
+var editPageTemplate = textTemplate.Must(
+	textTemplate.ParseFiles("templates/edit.html", "templates/base.html"))
+
+func getMainMenu() string {
+	content, err := ioutil.ReadFile(pagesPath + mainMenuName)
+	if err != nil {
+		content = defaultMainMenu
+	}
+	return markdownToHTML(content)
+}
 
 func markdownToHTML(args ...interface{}) string {
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
@@ -82,7 +95,7 @@ func viewPageHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 	updateHistory(name)
 	updatePageCache(page)
-	templateData := PageTemplateData{Page: page, History: &history}
+	templateData := PageTemplateData{Page: page, MainMenu: &mainMenu, History: &history}
 	viewPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
@@ -92,7 +105,7 @@ func editPageHandler(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		page = &Page{Name: name}
 	}
-	templateData := PageTemplateData{Page: page, History: &history}
+	templateData := PageTemplateData{Page: page, MainMenu: &mainMenu, History: &history}
 	editPageTemplate.ExecuteTemplate(writer, "base", templateData)
 }
 
@@ -110,6 +123,9 @@ func savePageHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	updatePageCache(page)
+	if name == mainMenuName {
+		mainMenu = getMainMenu()
+	}
 	http.Redirect(writer, request, "/pages/"+name, http.StatusFound)
 }
 

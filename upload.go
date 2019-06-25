@@ -11,6 +11,7 @@ import (
 // UploadTemplateData template context
 type UploadTemplateData struct {
 	UploadedFiles *[]UploadedFile
+	MainMenu      *string
 	History       *[]string
 }
 
@@ -59,6 +60,6 @@ func uploadHandler(writer http.ResponseWriter, request *http.Request) {
 		io.Copy(destFile, sourceFile)
 		uploadedFiles = getUploadedFiles()
 	}
-	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, History: &history}
+	templateData := UploadTemplateData{UploadedFiles: &uploadedFiles, MainMenu: &mainMenu, History: &history}
 	uploadTemplate.ExecuteTemplate(writer, "base", templateData)
 }
